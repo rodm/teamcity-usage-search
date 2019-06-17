@@ -1,0 +1,31 @@
+= TeamCity Usage Search plugin
+:uri-teamcity: https://www.jetbrains.com/teamcity/[TeamCity]
+:uri-jetbrains-plugin: https://plugins.jetbrains.com/plugin/
+
+A {uri-teamcity} plugin that provides support for searching build configurations that use a configuration parameter.
+Search supports partial parameter name searches and can be limited to a project and its sub-projects.
+
+== Using the plugin
+
+* Navigate to a project in the Administration page, select the `Parameter Usage` page.
+
+* Enter a configuration parameter name or part of a name and click the search button. A list of build configurations
+that contain a reference to the configuration parameter are returned.
+
+== Installation
+
+* Build the plugin using `./gradlew build`, the plugin is packaged into a zip file and can be found in the directory
+`build/distributions/`
+
+* Go to the plugin list of your TeamCity installation at `&lt;TeamCity URL&gt;/admin/admin.html?item=plugins` and
+click on the link _Upload plugin zip_ to install the plugin.
+
+* Restart TeamCity.
+
+== Compatibility
+
+The plugin is compatible with TeamCity 2019.1 and later.
+
+== License
+
+This plugin is available under the http://www.apache.org/licenses/LICENSE-2.0.html[Apache License, Version 2.0].

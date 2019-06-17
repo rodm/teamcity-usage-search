@@ -1,0 +1,17 @@
+
+# Gradle
+.gradle
+build
+gradle.properties
+
+# IDEA
+.idea
+*.iml
+
+# Gradle TeamCity plugin
+data/
+downloads/
+servers/
+
+# macOS
+.DS_Store
