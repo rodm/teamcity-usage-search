@@ -18,7 +18,7 @@ package com.github.rodm.teamcity.usage
 
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ParameterMatcherTest {
 

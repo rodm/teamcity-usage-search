@@ -21,7 +21,7 @@ import jetbrains.buildServer.serverSide.SProject
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.hasSize
 import org.hamcrest.Matchers.sameInstance
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 
 class ParameterSearchTest {

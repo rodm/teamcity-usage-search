@@ -17,13 +17,21 @@ extra["teamcityVersion"] = findProperty("teamcity.api.version") as String? ?: "2
 dependencies {
     implementation (kotlin("stdlib"))
 
-    testImplementation (group = "org.mockito", name = "mockito-core", version = "2.7.22")
+    testImplementation (platform("org.junit:junit-bom:5.4.2"))
+    testImplementation ("org.junit.jupiter:junit-jupiter-api")
+    testImplementation ("org.mockito:mockito-core:2.7.22")
+
+    testRuntimeOnly ("org.junit.jupiter:junit-jupiter-engine")
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
 }
 
 teamcity {
