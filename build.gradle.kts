@@ -7,6 +7,7 @@ plugins {
 
     id ("com.github.rodm.teamcity-server") version "1.2.1"
     id ("com.github.rodm.teamcity-environments") version "1.2.1"
+    id ("org.sonarqube") version "2.7.1"
 }
 
 group = "com.github.rodm"
