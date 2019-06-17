@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.3.31"
 
+    id ("org.gradle.jacoco")
     id ("com.github.rodm.teamcity-server") version "1.2.1"
     id ("com.github.rodm.teamcity-environments") version "1.2.1"
     id ("org.sonarqube") version "2.7.1"
@@ -33,6 +34,13 @@ tasks.withType<KotlinCompile> {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+    finalizedBy(tasks.named("jacocoTestReport"))
+}
+
+tasks.named<JacocoReport>("jacocoTestReport") {
+    reports {
+        xml.isEnabled = true
+    }
 }
 
 teamcity {
