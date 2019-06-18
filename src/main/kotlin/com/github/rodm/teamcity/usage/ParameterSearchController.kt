@@ -16,37 +16,23 @@
 
 package com.github.rodm.teamcity.usage
 
-import jetbrains.buildServer.controllers.BaseActionController
+import jetbrains.buildServer.controllers.BaseAjaxActionController
 import jetbrains.buildServer.serverSide.ProjectManager
 import jetbrains.buildServer.serverSide.SBuildServer
-import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
 import jetbrains.buildServer.web.openapi.ControllerAction
-import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.openapi.WebControllerManager
 import org.jdom.Element
-import org.springframework.web.servlet.ModelAndView
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class ParameterSearchController(buildServer: SBuildServer,
-                                controllerManager: WebControllerManager,
-                                private val pluginDescriptor: PluginDescriptor)
-    : BaseActionController(controllerManager)
+class ParameterSearchController(buildServer: SBuildServer, controllerManager: WebControllerManager)
+    : BaseAjaxActionController(controllerManager)
 {
-    var results: List<SBuildType> = listOf()
-
     init {
         controllerManager.registerController("/admin/usage.html", this)
         controllerManager.registerAction(this, ParameterSearchAction(buildServer.projectManager))
-    }
-
-    override fun doHandle(request: HttpServletRequest, response: HttpServletResponse): ModelAndView? {
-        doAction(request, response, null)
-        val model = ModelAndView(pluginDescriptor.getPluginResourcesPath("usageResults.jsp"))
-        model.addObject("results", results)
-        return model
     }
 
     inner class ParameterSearchAction(private val projectManager: ProjectManager) : ControllerAction {
@@ -61,7 +47,15 @@ class ParameterSearchController(buildServer: SBuildServer,
 
             if (project != null) {
                 val searcher = ParameterSearch(searchFor, project)
-                this@ParameterSearchController.results = searcher.findMatchingBuildTypes()
+                val results = searcher.findMatchingBuildTypes()
+                val resultsElement = Element("results")
+                results.forEach { buildType ->
+                    val resultElement = Element("result")
+                    resultElement.setAttribute("id", buildType.externalId)
+                    resultElement.setAttribute("name", buildType.fullName)
+                    resultsElement.addContent(resultElement)
+                }
+                ajaxResponse?.addContent(resultsElement)
             }
         }
 

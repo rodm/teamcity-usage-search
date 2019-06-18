@@ -17,6 +17,7 @@
 <%@ include file="/include-internal.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="admin" tagdir="/WEB-INF/tags/admin" %>
 
 <jsp:useBean id="currentProject" type="jetbrains.buildServer.serverSide.SProject" scope="request"/>
 
@@ -45,5 +46,20 @@
 
   <div id="errors"></div>
 
-  <div id="usageResults"></div>
+  <div>
+      <table class="parametersTable" style="width: 100%">
+          <tbody id="usageResults">
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div id="usageResultsTemplate" style="display:none">
+    <table>
+        <tbody>
+            <tr id="usageResultBuildTypeTemplate">
+                <td><admin:editBuildTypeLink buildTypeId="##BUILD_TYPE_ID##">NAME</admin:editBuildTypeLink></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
