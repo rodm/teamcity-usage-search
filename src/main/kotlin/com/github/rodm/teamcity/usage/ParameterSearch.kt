@@ -32,6 +32,14 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                     results.putIfAbsent(buildType.externalId, buildType)
                 }
             }
+            buildType.buildRunners.forEach { runner ->
+                runner.parameters.forEach { parameter ->
+                    val names = matcher.getMatchingNames(parameter.value)
+                    if (names.isNotEmpty()) {
+                        results.putIfAbsent(buildType.externalId, buildType)
+                    }
+                }
+            }
         }
         return results.values.toList()
     }
