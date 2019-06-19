@@ -88,4 +88,18 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(0))
     }
+
+    @Test
+    fun `search for parameter returns build configuration when found in build feature`() {
+        val feature = buildFeature().withParameters(mapOf("param1" to "%parameter%"))
+        val buildType = buildType().withBuildFeature(feature)
+        val project = project().withBuildType(buildType)
+
+        val searchFor = "parameter"
+        val searcher = ParameterSearch(searchFor, project)
+        val matches = searcher.findMatchingBuildTypes()
+
+        assertThat(matches, hasSize(1))
+        assertThat(matches[0], sameInstance<SBuildType>(buildType))
+    }
 }

@@ -16,6 +16,7 @@
 
 package com.github.rodm.teamcity.usage
 
+import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
 import jetbrains.buildServer.serverSide.SBuildRunnerDescriptor
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
@@ -27,6 +28,10 @@ fun project(): FakeProject {
 
 fun buildType(): FakeBuildType {
     return FakeBuildType()
+}
+
+fun buildFeature(): FakeBuildFeature {
+    return FakeBuildFeature()
 }
 
 class FakeProject: SProject by Mockito.mock(SProject::class.java) {
@@ -48,6 +53,7 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
     private val ownParams: MutableMap<String, String> = mutableMapOf()
     private val params: MutableMap<String, String> = mutableMapOf()
     private val runners = mutableListOf<SBuildRunnerDescriptor>()
+    private val features = mutableListOf<SBuildFeatureDescriptor>()
 
     override fun addBuildRunner(name: String, runnerType: String, parameters: MutableMap<String, String>): SBuildRunnerDescriptor {
         val runner = FakeBuildRunner()
@@ -60,13 +66,12 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
         return runners
     }
 
-    override fun getOwnParameters(): MutableMap<String, String> {
-        return ownParams
+    override fun getBuildFeatures(): MutableCollection<SBuildFeatureDescriptor> {
+        return features
     }
 
-    fun setOwnParameters(parameters: Map<String, String>) {
-        ownParams.clear()
-        ownParams.putAll(parameters)
+    override fun getOwnParameters(): MutableMap<String, String> {
+        return ownParams
     }
 
     override fun getParameters(): MutableMap<String, String> {
@@ -86,6 +91,11 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
         ownParams.putAll(parameters)
         return this
     }
+
+    fun withBuildFeature(feature: SBuildFeatureDescriptor): FakeBuildType {
+        features.add(feature)
+        return this
+    }
 }
 
 class FakeBuildRunner : SBuildRunnerDescriptor by Mockito.mock(SBuildRunnerDescriptor::class.java) {
@@ -99,5 +109,20 @@ class FakeBuildRunner : SBuildRunnerDescriptor by Mockito.mock(SBuildRunnerDescr
     fun setParameters(parameters: Map<String, String>) {
         params.clear()
         params.putAll(parameters)
+    }
+}
+
+class FakeBuildFeature : SBuildFeatureDescriptor by Mockito.mock(SBuildFeatureDescriptor::class.java) {
+
+    private val params: MutableMap<String, String> = mutableMapOf()
+
+    override fun getParameters(): MutableMap<String, String> {
+        return params
+    }
+
+    fun withParameters(parameters: Map<String, String>): FakeBuildFeature {
+        params.clear()
+        params.putAll(parameters)
+        return this
     }
 }
