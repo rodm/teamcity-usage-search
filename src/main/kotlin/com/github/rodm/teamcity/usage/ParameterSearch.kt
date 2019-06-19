@@ -48,6 +48,12 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                     }
                 }
             }
+            buildType.requirements.forEach { requirement ->
+                val names = matcher.getMatchingNames(requirement.propertyValue ?: "")
+                if (names.isNotEmpty()) {
+                    results.putIfAbsent(buildType.externalId, buildType)
+                }
+            }
         }
         return results.values.toList()
     }

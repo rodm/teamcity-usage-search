@@ -16,6 +16,8 @@
 
 package com.github.rodm.teamcity.usage
 
+import jetbrains.buildServer.requirements.Requirement
+import jetbrains.buildServer.requirements.RequirementType.EQUALS
 import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
 import jetbrains.buildServer.serverSide.SBuildRunnerDescriptor
 import jetbrains.buildServer.serverSide.SBuildType
@@ -32,6 +34,10 @@ fun buildType(): FakeBuildType {
 
 fun buildFeature(): FakeBuildFeature {
     return FakeBuildFeature()
+}
+
+fun requirement(name: String, value: String): Requirement {
+    return Requirement(name, value, EQUALS)
 }
 
 class FakeProject: SProject by Mockito.mock(SProject::class.java) {
@@ -54,6 +60,7 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
     private val params: MutableMap<String, String> = mutableMapOf()
     private val runners = mutableListOf<SBuildRunnerDescriptor>()
     private val features = mutableListOf<SBuildFeatureDescriptor>()
+    private val requirements = mutableListOf<Requirement>()
 
     override fun addBuildRunner(name: String, runnerType: String, parameters: MutableMap<String, String>): SBuildRunnerDescriptor {
         val runner = FakeBuildRunner()
@@ -69,6 +76,8 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
     override fun getBuildFeatures(): MutableCollection<SBuildFeatureDescriptor> {
         return features
     }
+
+    override fun getRequirements(): MutableList<Requirement> = requirements
 
     override fun getOwnParameters(): MutableMap<String, String> {
         return ownParams
@@ -94,6 +103,11 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
 
     fun withBuildFeature(feature: SBuildFeatureDescriptor): FakeBuildType {
         features.add(feature)
+        return this
+    }
+
+    fun withRequirement(requirement: Requirement): FakeBuildType {
+        requirements.add(requirement)
         return this
     }
 }
