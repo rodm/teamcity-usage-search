@@ -16,85 +16,18 @@
 
 package com.github.rodm.teamcity.usage
 
-import jetbrains.buildServer.serverSide.SBuildRunnerDescriptor
 import jetbrains.buildServer.serverSide.SBuildType
-import jetbrains.buildServer.serverSide.SProject
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.hasSize
 import org.hamcrest.Matchers.sameInstance
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
 
 class ParameterSearchTest {
 
-    class FakeProject: SProject by mock(SProject::class.java) {
-
-        private val buildTypes: MutableList<SBuildType> = mutableListOf()
-
-        override fun getBuildTypes(): MutableList<SBuildType> {
-            return buildTypes
-        }
-    }
-
-    class FakeBuildType: SBuildType by mock(SBuildType::class.java) {
-
-        private val ownParams: MutableMap<String, String> = mutableMapOf()
-        private val params: MutableMap<String, String> = mutableMapOf()
-        private val runners = mutableListOf<SBuildRunnerDescriptor>()
-
-        override fun addBuildRunner(name: String, runnerType: String, parameters: MutableMap<String, String>): SBuildRunnerDescriptor {
-            val runner = FakeBuildRunner()
-            runner.setParameters(parameters)
-            runners.add(runner)
-            return runner
-        }
-
-        override fun getBuildRunners(): MutableList<SBuildRunnerDescriptor> {
-            return runners
-        }
-
-        override fun getOwnParameters(): MutableMap<String, String> {
-            return ownParams
-        }
-
-        fun setOwnParameters(parameters: Map<String, String>) {
-            ownParams.clear()
-            ownParams.putAll(parameters)
-        }
-
-        override fun getParameters(): MutableMap<String, String> {
-            val result = mutableMapOf<String, String>()
-            result.putAll(params)
-            result.putAll(ownParams)
-            return result
-        }
-
-        fun setParameters(parameters: Map<String, String>) {
-            params.clear()
-            params.putAll(parameters)
-        }
-    }
-
-    class FakeBuildRunner : SBuildRunnerDescriptor by mock(SBuildRunnerDescriptor::class.java) {
-
-        private val params: MutableMap<String, String> = mutableMapOf()
-
-        override fun getParameters(): MutableMap<String, String> {
-            return params
-        }
-
-        fun setParameters(parameters: Map<String, String>) {
-            params.clear()
-            params.putAll(parameters)
-        }
-    }
-
     @Test
     fun `search for parameter not referenced by a build configuration returns no matches`() {
-        val buildType = FakeBuildType()
-        buildType.setOwnParameters(mapOf("param1" to "value1"))
-        val project = FakeProject()
-        project.buildTypes.add(buildType)
+        val buildType = buildType().withOwnParameters(mapOf("param1" to "value1"))
+        val project = project().withBuildType(buildType)
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
@@ -105,10 +38,8 @@ class ParameterSearchTest {
 
     @Test
     fun `search for parameter referenced by a build configuration returns matched build type`() {
-        val buildType = FakeBuildType()
-        buildType.setOwnParameters(mapOf("param1" to "%parameter%"))
-        val project = FakeProject()
-        project.buildTypes.add(buildType)
+        val buildType = buildType().withOwnParameters(mapOf("param1" to "%parameter%"))
+        val project = project().withBuildType(buildType)
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
@@ -120,10 +51,9 @@ class ParameterSearchTest {
 
     @Test
     fun `search for parameter referenced by a build configuration thru inheritance returns no matches`() {
-        val buildType = FakeBuildType()
+        val buildType = buildType()
         buildType.setParameters(mapOf("param1" to "%parameter%"))
-        val project = FakeProject()
-        project.buildTypes.add(buildType)
+        val project = project().withBuildType(buildType)
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
@@ -134,10 +64,9 @@ class ParameterSearchTest {
 
     @Test
     fun `search for parameter returns build configuration when found in build steps`() {
-        val buildType = FakeBuildType()
+        val buildType = buildType()
         buildType.addBuildRunner("name", "type", mutableMapOf("param1" to "%parameter%"))
-        val project = FakeProject()
-        project.buildTypes.add(buildType)
+        val project = project().withBuildType(buildType)
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
@@ -149,10 +78,9 @@ class ParameterSearchTest {
 
     @Test
     fun `search for parameter returns no matches when not found in build steps`() {
-        val buildType = FakeBuildType()
+        val buildType = buildType()
         buildType.addBuildRunner("name", "type", mutableMapOf("param1" to "value1"))
-        val project = FakeProject()
-        project.buildTypes.add(buildType)
+        val project = project().withBuildType(buildType)
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
