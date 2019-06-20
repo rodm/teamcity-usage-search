@@ -16,10 +16,9 @@
 
 package com.github.rodm.teamcity.usage
 
-import jetbrains.buildServer.serverSide.SBuildType
 import org.jdom.Element
 
-class SearchResults(elements:Collection<SBuildType>): ArrayList<SBuildType>(elements) {
+class SearchResults(elements: Collection<SearchResult>): ArrayList<SearchResult>(elements) {
 
     fun serialize(root: Element) {
         forEach { result ->
@@ -30,3 +29,5 @@ class SearchResults(elements:Collection<SBuildType>): ArrayList<SBuildType>(elem
         }
     }
 }
+
+data class SearchResult(val externalId: String, val fullName: String)

@@ -16,10 +16,9 @@
 
 package com.github.rodm.teamcity.usage
 
-import jetbrains.buildServer.serverSide.SBuildType
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.hasSize
-import org.hamcrest.Matchers.sameInstance
+import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 
 class ParameterSearchTest {
@@ -46,7 +45,7 @@ class ParameterSearchTest {
         val matches = searcher.findMatchingBuildTypes()
 
         assertThat(matches, hasSize(1))
-        assertThat(matches[0], sameInstance<SBuildType>(buildType))
+        assertThat(matches[0], equalTo(searchResult(buildType)))
     }
 
     @Test
@@ -73,7 +72,7 @@ class ParameterSearchTest {
         val matches = searcher.findMatchingBuildTypes()
 
         assertThat(matches, hasSize(1))
-        assertThat(matches[0], sameInstance<SBuildType>(buildType))
+        assertThat(matches[0], equalTo(searchResult(buildType)))
     }
 
     @Test
@@ -100,7 +99,7 @@ class ParameterSearchTest {
         val matches = searcher.findMatchingBuildTypes()
 
         assertThat(matches, hasSize(1))
-        assertThat(matches[0], sameInstance<SBuildType>(buildType))
+        assertThat(matches[0], equalTo(searchResult(buildType)))
     }
 
     @Test
@@ -114,7 +113,7 @@ class ParameterSearchTest {
         val matches = searcher.findMatchingBuildTypes()
 
         assertThat(matches, hasSize(1))
-        assertThat(matches[0], sameInstance<SBuildType>(buildType))
+        assertThat(matches[0], equalTo(searchResult(buildType)))
     }
 
     @Test
@@ -127,7 +126,7 @@ class ParameterSearchTest {
         val matches = searcher.findMatchingBuildTypes()
 
         assertThat(matches, hasSize(1))
-        assertThat(matches[0], sameInstance<SBuildType>(buildType))
+        assertThat(matches[0], equalTo(searchResult(buildType)))
     }
 
     @Test
@@ -141,7 +140,7 @@ class ParameterSearchTest {
         val matches = searcher.findMatchingBuildTypes()
 
         assertThat(matches, hasSize(1))
-        assertThat(matches[0], sameInstance<SBuildType>(buildType))
+        assertThat(matches[0], equalTo(searchResult(buildType)))
     }
 
     @Test
@@ -155,6 +154,6 @@ class ParameterSearchTest {
         val matches = searcher.findMatchingBuildTypes()
 
         assertThat(matches, hasSize(1))
-        assertThat(matches[0], sameInstance<SBuildType>(buildType))
+        assertThat(matches[0], equalTo(searchResult(buildType)))
     }
 }

@@ -28,6 +28,8 @@ import jetbrains.buildServer.util.Option
 import jetbrains.buildServer.util.StringOption
 import org.mockito.Mockito
 
+fun searchResult(buildType: SBuildType): SearchResult = SearchResult(buildType.externalId, buildType.fullName)
+
 fun project(): FakeProject {
     return FakeProject()
 }
@@ -124,10 +126,6 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
         params.clear()
         params.putAll(parameters)
     }
-
-    fun withName(name: String): FakeBuildType = apply { this.name = name }
-
-    fun withId(id: String): FakeBuildType = apply { this.id = id }
 
     fun withOwnParameters(parameters: Map<String, String>): SBuildType {
         ownParams.clear()

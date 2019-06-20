@@ -16,34 +16,34 @@
 
 package com.github.rodm.teamcity.usage
 
-import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
 
 class ParameterSearch(private val parameter: String, private val project: SProject) {
 
     fun findMatchingBuildTypes(): SearchResults {
-        val results = linkedMapOf<String, SBuildType>()
+        val results = linkedMapOf<String, SearchResult>()
         val matcher = ParameterMatcher(parameter)
 
         project.buildTypes.forEach { buildType ->
+            val buildTypeResult = SearchResult(buildType.externalId, buildType.fullName)
             buildType.ownOptions.forEach { option ->
                 val optionValue = buildType.getOption(option).toString()
                 val names = matcher.getMatchingNames(optionValue)
                 if (names.isNotEmpty()) {
-                    results.putIfAbsent(buildType.externalId, buildType)
+                    results.putIfAbsent(buildType.externalId, buildTypeResult)
                 }
             }
             buildType.ownParameters.forEach { parameter ->
                 val names = matcher.getMatchingNames(parameter.value)
                 if (names.isNotEmpty()) {
-                    results.putIfAbsent(buildType.externalId, buildType)
+                    results.putIfAbsent(buildType.externalId, buildTypeResult)
                 }
             }
             buildType.buildRunners.forEach { runner ->
                 runner.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
                     if (names.isNotEmpty()) {
-                        results.putIfAbsent(buildType.externalId, buildType)
+                        results.putIfAbsent(buildType.externalId, buildTypeResult)
                     }
                 }
             }
@@ -51,7 +51,7 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                 feature.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
                     if (names.isNotEmpty()) {
-                        results.putIfAbsent(buildType.externalId, buildType)
+                        results.putIfAbsent(buildType.externalId, buildTypeResult)
                     }
                 }
             }
@@ -60,20 +60,20 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                     val optionValue = dependency.getOption(option).toString()
                     val names = matcher.getMatchingNames(optionValue)
                     if (names.isNotEmpty()) {
-                        results.putIfAbsent(buildType.externalId, buildType)
+                        results.putIfAbsent(buildType.externalId, buildTypeResult)
                     }
                 }
             }
             buildType.artifactDependencies.forEach { dependency ->
                 val names = matcher.getMatchingNames(dependency.sourcePaths)
                 if (names.isNotEmpty()) {
-                    results.putIfAbsent(buildType.externalId, buildType)
+                    results.putIfAbsent(buildType.externalId, buildTypeResult)
                 }
             }
             buildType.requirements.forEach { requirement ->
                 val names = matcher.getMatchingNames(requirement.propertyValue ?: "")
                 if (names.isNotEmpty()) {
-                    results.putIfAbsent(buildType.externalId, buildType)
+                    results.putIfAbsent(buildType.externalId, buildTypeResult)
                 }
             }
         }

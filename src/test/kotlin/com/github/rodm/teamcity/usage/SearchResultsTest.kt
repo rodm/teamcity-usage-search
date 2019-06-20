@@ -39,7 +39,7 @@ class SearchResultsTest {
     @Test
     fun `serialize search results with matching build type returns result element`() {
         val xmlResponse = XmlResponseUtil.newXmlResponse()
-        val results = SearchResults(listOf(buildType().withId("extId").withName("build name")))
+        val results = SearchResults(listOf(SearchResult("extId", "build name")))
 
         results.serialize(xmlResponse)
 
@@ -55,8 +55,8 @@ class SearchResultsTest {
         val xmlResponse = XmlResponseUtil.newXmlResponse()
         val results = SearchResults(
             listOf(
-                buildType().withId("extId1").withName("build name 1"),
-                buildType().withId("extId2").withName("build name 2")
+                SearchResult("extId1", "build name 1"),
+                SearchResult("extId2", "build name 2")
             ))
 
         results.serialize(xmlResponse)
