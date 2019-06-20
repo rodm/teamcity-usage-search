@@ -22,6 +22,7 @@ import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
 import jetbrains.buildServer.serverSide.SBuildRunnerDescriptor
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
+import jetbrains.buildServer.serverSide.dependency.Dependency
 import jetbrains.buildServer.util.Option
 import jetbrains.buildServer.util.StringOption
 import org.mockito.Mockito
@@ -41,6 +42,8 @@ fun buildFeature(): FakeBuildFeature {
 fun requirement(name: String, value: String): Requirement {
     return Requirement(name, value, EQUALS)
 }
+
+fun dependency(): FakeDependency = FakeDependency()
 
 class FakeProject: SProject by Mockito.mock(SProject::class.java) {
 
@@ -64,6 +67,7 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
     private val features = mutableListOf<SBuildFeatureDescriptor>()
     private val requirements = mutableListOf<Requirement>()
     private val ownOptions = mutableMapOf<String, String>()
+    private val ownDependencies = mutableListOf<Dependency>()
 
     override fun addBuildRunner(name: String, runnerType: String, parameters: MutableMap<String, String>): SBuildRunnerDescriptor {
         val runner = FakeBuildRunner()
@@ -101,6 +105,10 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
         return (ownOptions[option.key] ?: option.defaultValue) as T
     }
 
+    override fun getOwnDependencies(): MutableList<Dependency> {
+        return ownDependencies
+    }
+
     fun setParameters(parameters: Map<String, String>) {
         params.clear()
         params.putAll(parameters)
@@ -124,6 +132,11 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
 
     fun withOption(name: String, value: String): FakeBuildType {
         ownOptions[name] = value
+        return this
+    }
+
+    fun withDependency(dependency: Dependency): FakeBuildType {
+        ownDependencies.add(dependency)
         return this
     }
 }
@@ -153,6 +166,24 @@ class FakeBuildFeature : SBuildFeatureDescriptor by Mockito.mock(SBuildFeatureDe
     fun withParameters(parameters: Map<String, String>): FakeBuildFeature {
         params.clear()
         params.putAll(parameters)
+        return this
+    }
+}
+
+class FakeDependency : Dependency by Mockito.mock(Dependency::class.java) {
+
+    private val ownOptions = mutableMapOf<String, String>()
+
+    override fun getOwnOptions(): MutableCollection<Option<Any>> {
+        return ownOptions.keys.map { key -> StringOption(key, "") }.toMutableList() as MutableCollection<Option<Any>>
+    }
+
+    override fun <T : Any?> getOption(option: Option<T>): T {
+        return (ownOptions[option.key] ?: option.defaultValue) as T
+    }
+
+    fun withOption(name: String, value: String): FakeDependency {
+        ownOptions[name] = value
         return this
     }
 }

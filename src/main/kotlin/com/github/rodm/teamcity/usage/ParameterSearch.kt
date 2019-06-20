@@ -55,6 +55,15 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                     }
                 }
             }
+            buildType.ownDependencies.forEach { dependency ->
+                dependency.ownOptions.forEach { option ->
+                    val optionValue = dependency.getOption(option).toString()
+                    val names = matcher.getMatchingNames(optionValue)
+                    if (names.isNotEmpty()) {
+                        results.putIfAbsent(buildType.externalId, buildType)
+                    }
+                }
+            }
             buildType.requirements.forEach { requirement ->
                 val names = matcher.getMatchingNames(requirement.propertyValue ?: "")
                 if (names.isNotEmpty()) {
