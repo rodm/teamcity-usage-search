@@ -64,6 +64,12 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                     }
                 }
             }
+            buildType.artifactDependencies.forEach { dependency ->
+                val names = matcher.getMatchingNames(dependency.sourcePaths)
+                if (names.isNotEmpty()) {
+                    results.putIfAbsent(buildType.externalId, buildType)
+                }
+            }
             buildType.requirements.forEach { requirement ->
                 val names = matcher.getMatchingNames(requirement.propertyValue ?: "")
                 if (names.isNotEmpty()) {

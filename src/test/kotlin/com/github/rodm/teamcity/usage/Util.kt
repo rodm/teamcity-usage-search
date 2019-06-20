@@ -22,6 +22,7 @@ import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
 import jetbrains.buildServer.serverSide.SBuildRunnerDescriptor
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
+import jetbrains.buildServer.serverSide.artifacts.SArtifactDependency
 import jetbrains.buildServer.serverSide.dependency.Dependency
 import jetbrains.buildServer.util.Option
 import jetbrains.buildServer.util.StringOption
@@ -44,6 +45,8 @@ fun requirement(name: String, value: String): Requirement {
 }
 
 fun dependency(): FakeDependency = FakeDependency()
+
+fun artifactDependency(): FakeArtifactDependency = FakeArtifactDependency()
 
 class FakeProject: SProject by Mockito.mock(SProject::class.java) {
 
@@ -70,6 +73,7 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
     private val requirements = mutableListOf<Requirement>()
     private val ownOptions = mutableMapOf<String, String>()
     private val ownDependencies = mutableListOf<Dependency>()
+    private val artifactDependencies = mutableListOf<SArtifactDependency>()
 
     override fun getExternalId(): String = id
     override fun getFullName(): String = name
@@ -114,6 +118,8 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
         return ownDependencies
     }
 
+    override fun getArtifactDependencies(): MutableList<SArtifactDependency> = artifactDependencies
+    
     fun setParameters(parameters: Map<String, String>) {
         params.clear()
         params.putAll(parameters)
@@ -146,6 +152,11 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
 
     fun withDependency(dependency: Dependency): FakeBuildType {
         ownDependencies.add(dependency)
+        return this
+    }
+
+    fun withArtifactDependency(dependency: SArtifactDependency): FakeBuildType {
+        artifactDependencies.add(dependency)
         return this
     }
 }
@@ -195,4 +206,13 @@ class FakeDependency : Dependency by Mockito.mock(Dependency::class.java) {
         ownOptions[name] = value
         return this
     }
+}
+
+class FakeArtifactDependency : SArtifactDependency by Mockito.mock(SArtifactDependency::class.java) {
+
+    private var sourcePaths: String = ""
+
+    override fun getSourcePaths(): String = sourcePaths
+
+    fun withSourcePaths(paths: String) = apply { sourcePaths = paths }
 }
