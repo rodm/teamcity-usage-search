@@ -22,6 +22,8 @@ import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
 import jetbrains.buildServer.serverSide.SBuildRunnerDescriptor
 import jetbrains.buildServer.serverSide.SBuildType
 import jetbrains.buildServer.serverSide.SProject
+import jetbrains.buildServer.util.Option
+import jetbrains.buildServer.util.StringOption
 import org.mockito.Mockito
 
 fun project(): FakeProject {
@@ -61,6 +63,7 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
     private val runners = mutableListOf<SBuildRunnerDescriptor>()
     private val features = mutableListOf<SBuildFeatureDescriptor>()
     private val requirements = mutableListOf<Requirement>()
+    private val ownOptions = mutableMapOf<String, String>()
 
     override fun addBuildRunner(name: String, runnerType: String, parameters: MutableMap<String, String>): SBuildRunnerDescriptor {
         val runner = FakeBuildRunner()
@@ -90,6 +93,14 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
         return result
     }
 
+    override fun getOwnOptions(): MutableCollection<Option<Any>> {
+        return ownOptions.keys.map { key -> StringOption(key, "") }.toMutableList() as MutableCollection<Option<Any>>
+    }
+
+    override fun <T : Any?> getOption(option: Option<T>): T {
+        return (ownOptions[option.key] ?: option.defaultValue) as T
+    }
+
     fun setParameters(parameters: Map<String, String>) {
         params.clear()
         params.putAll(parameters)
@@ -108,6 +119,11 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
 
     fun withRequirement(requirement: Requirement): FakeBuildType {
         requirements.add(requirement)
+        return this
+    }
+
+    fun withOption(name: String, value: String): FakeBuildType {
+        ownOptions[name] = value
         return this
     }
 }

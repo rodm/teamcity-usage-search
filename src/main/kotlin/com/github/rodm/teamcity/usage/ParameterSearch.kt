@@ -26,6 +26,13 @@ class ParameterSearch(private val parameter: String, private val project: SProje
         val matcher = ParameterMatcher(parameter)
 
         project.buildTypes.forEach { buildType ->
+            buildType.ownOptions.forEach { option ->
+                val optionValue = buildType.getOption(option).toString()
+                val names = matcher.getMatchingNames(optionValue)
+                if (names.isNotEmpty()) {
+                    results.putIfAbsent(buildType.externalId, buildType)
+                }
+            }
             buildType.ownParameters.forEach { parameter ->
                 val names = matcher.getMatchingNames(parameter.value)
                 if (names.isNotEmpty()) {
