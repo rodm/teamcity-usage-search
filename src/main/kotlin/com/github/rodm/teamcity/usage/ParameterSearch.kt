@@ -21,7 +21,7 @@ import jetbrains.buildServer.serverSide.SProject
 
 class ParameterSearch(private val parameter: String, private val project: SProject) {
 
-    fun findMatchingBuildTypes(): List<SBuildType> {
+    fun findMatchingBuildTypes(): SearchResults {
         val results = linkedMapOf<String, SBuildType>()
         val matcher = ParameterMatcher(parameter)
 
@@ -71,6 +71,6 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                 }
             }
         }
-        return results.values.toList()
+        return SearchResults(results.values)
     }
 }

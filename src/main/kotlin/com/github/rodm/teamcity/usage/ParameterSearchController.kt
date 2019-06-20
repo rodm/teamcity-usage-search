@@ -48,14 +48,7 @@ class ParameterSearchController(buildServer: SBuildServer, controllerManager: We
             if (project != null) {
                 val searcher = ParameterSearch(searchFor, project)
                 val results = searcher.findMatchingBuildTypes()
-                val resultsElement = Element("results")
-                results.forEach { buildType ->
-                    val resultElement = Element("result")
-                    resultElement.setAttribute("id", buildType.externalId)
-                    resultElement.setAttribute("name", buildType.fullName)
-                    resultsElement.addContent(resultElement)
-                }
-                ajaxResponse?.addContent(resultsElement)
+                ajaxResponse?.apply { results.serialize(ajaxResponse) }
             }
         }
 

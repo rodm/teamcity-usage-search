@@ -61,6 +61,8 @@ class FakeProject: SProject by Mockito.mock(SProject::class.java) {
 
 class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
 
+    private var id: String = ""
+    private var name: String = ""
     private val ownParams: MutableMap<String, String> = mutableMapOf()
     private val params: MutableMap<String, String> = mutableMapOf()
     private val runners = mutableListOf<SBuildRunnerDescriptor>()
@@ -68,6 +70,9 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
     private val requirements = mutableListOf<Requirement>()
     private val ownOptions = mutableMapOf<String, String>()
     private val ownDependencies = mutableListOf<Dependency>()
+
+    override fun getExternalId(): String = id
+    override fun getFullName(): String = name
 
     override fun addBuildRunner(name: String, runnerType: String, parameters: MutableMap<String, String>): SBuildRunnerDescriptor {
         val runner = FakeBuildRunner()
@@ -113,6 +118,10 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
         params.clear()
         params.putAll(parameters)
     }
+
+    fun withName(name: String): FakeBuildType = apply { this.name = name }
+
+    fun withId(id: String): FakeBuildType = apply { this.id = id }
 
     fun withOwnParameters(parameters: Map<String, String>): SBuildType {
         ownParams.clear()
