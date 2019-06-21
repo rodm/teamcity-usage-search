@@ -21,51 +21,51 @@ import jetbrains.buildServer.serverSide.SProject
 class ParameterSearch(private val parameter: String, private val project: SProject) {
 
     fun findMatchingBuildTypes(): SearchResults {
-        val results = linkedMapOf<String, SearchResult>()
+        val results = mutableListOf<SearchResult>()
         val matcher = ParameterMatcher(parameter)
 
         project.buildTypes.forEach { buildType ->
-            val buildTypeResult = SearchResult(buildType.externalId, buildType.fullName)
+            val result = SearchResult(buildType.externalId, buildType.fullName)
             buildType.ownOptions.forEach { option ->
                 val optionValue = buildType.getOption(option).toString()
                 val names = matcher.getMatchingNames(optionValue)
-                buildTypeResult.namesFor("General Settings", names)
+                result.namesFor("General Settings", names)
             }
             buildType.ownParameters.forEach { parameter ->
                 val names = matcher.getMatchingNames(parameter.value)
-                buildTypeResult.namesFor("Parameters", names)
+                result.namesFor("Parameters", names)
             }
             buildType.buildRunners.forEach { runner ->
                 runner.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
-                    buildTypeResult.namesFor("Build Steps", names)
+                    result.namesFor("Build Steps", names)
                 }
             }
             buildType.buildFeatures.forEach { feature ->
                 feature.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
-                    buildTypeResult.namesFor("Build Features", names)
+                    result.namesFor("Build Features", names)
                 }
             }
             buildType.ownDependencies.forEach { dependency ->
                 dependency.ownOptions.forEach { option ->
                     val optionValue = dependency.getOption(option).toString()
                     val names = matcher.getMatchingNames(optionValue)
-                    buildTypeResult.namesFor("Dependencies", names)
+                    result.namesFor("Dependencies", names)
                 }
             }
             buildType.artifactDependencies.forEach { dependency ->
                 val names = matcher.getMatchingNames(dependency.sourcePaths)
-                buildTypeResult.namesFor("Dependencies", names)
+                result.namesFor("Dependencies", names)
             }
             buildType.requirements.forEach { requirement ->
                 val names = matcher.getMatchingNames(requirement.propertyValue ?: "")
-                buildTypeResult.namesFor("Agent Requirements", names)
+                result.namesFor("Agent Requirements", names)
             }
-            if (buildTypeResult.hasMatches()) {
-                results.putIfAbsent(buildType.externalId, buildTypeResult)
+            if (result.hasMatches()) {
+                results.add(result)
             }
         }
-        return SearchResults(results.values)
+        return SearchResults(results)
     }
 }
