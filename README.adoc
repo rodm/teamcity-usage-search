@@ -1,6 +1,7 @@
 = TeamCity Usage Search plugin
 :uri-teamcity: https://www.jetbrains.com/teamcity/[TeamCity]
-:uri-jetbrains-plugin: https://plugins.jetbrains.com/plugin/
+:uri-jetbrains-plugin: https://plugins.jetbrains.com/plugin/12596-usage-search
+:uri-gradle: https://gradle.org/[Gradle]
 
 A {uri-teamcity} plugin that provides support for searching build configurations that use a configuration parameter.
 Search supports partial parameter name searches and can be limited to a project and its sub-projects.
@@ -14,13 +15,41 @@ that contain a reference to the configuration parameter are returned.
 
 == Installation
 
-* Build the plugin using `./gradlew build`, the plugin is packaged into a zip file and can be found in the directory
-`build/distributions/`
+* Download the plugin from {uri-jetbrains-plugin}[JetBrains TeamCity Plugin Repository]
 
 * Go to the plugin list of your TeamCity installation at `&lt;TeamCity URL&gt;/admin/admin.html?item=plugins` and
 click on the link _Upload plugin zip_ to install the plugin.
 
 * Restart TeamCity.
+
+== How to build the plugin
+
+The build uses {uri-gradle}, the following tasks can be used to build the plugin and deploy it to a
+local TeamCity Server for testing.
+
+Build the plugin
+
+    ./gradlew build
+
+The plugin is packaged into a zip file and found in the following directory `build/distributions/`, it is deployed
+if TeamCity is started using the Gradle task shown below.
+
+To install TeamCity
+
+    ./gradlew installTeamcity2019.1
+
+Start TeamCity Server and Agent
+
+    ./gradlew startTeamcity2019.1
+
+Stop TeamCity Server and Agent
+
+    ./gradlew stopTeamcity2019.1
+
+To build and re-deploy the plugin
+
+    ./gradlew deployToTeamcity2019.1
+
 
 == Compatibility
 
