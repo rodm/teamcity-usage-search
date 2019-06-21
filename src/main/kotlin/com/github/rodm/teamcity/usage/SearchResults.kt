@@ -30,4 +30,6 @@ class SearchResults(elements: Collection<SearchResult>): ArrayList<SearchResult>
     }
 }
 
-data class SearchResult(val externalId: String, val fullName: String)
+data class SearchResult(val externalId: String, val fullName: String) {
+    val names: MutableList<String> = mutableListOf()
+}

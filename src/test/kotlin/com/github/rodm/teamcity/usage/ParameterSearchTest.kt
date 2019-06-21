@@ -17,8 +17,10 @@
 package com.github.rodm.teamcity.usage
 
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.hasSize
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.hasSize
+import org.hamcrest.Matchers.contains
+import org.hamcrest.Matchers.containsInAnyOrder
 import org.junit.jupiter.api.Test
 
 class ParameterSearchTest {
@@ -62,6 +64,19 @@ class ParameterSearchTest {
     }
 
     @Test
+    fun `search for parameter returns result with matching names`() {
+        val buildType = buildType().withOwnParameters(mapOf("param1" to "%parameter1%", "param2" to "%prop2% %param3%"))
+        val project = project().withBuildType(buildType)
+
+        val searchFor = "param"
+        val searcher = ParameterSearch(searchFor, project)
+        val matches = searcher.findMatchingBuildTypes()
+
+        assertThat(matches[0], equalTo(searchResult(buildType)))
+        assertThat(matches[0].names, containsInAnyOrder(equalTo("parameter1"), equalTo("param3")))
+    }
+    
+    @Test
     fun `search for parameter returns build configuration when found in build steps`() {
         val buildType = buildType()
         buildType.addBuildRunner("name", "type", mutableMapOf("param1" to "%parameter%"))
@@ -73,6 +88,7 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
+        assertThat(matches[0].names, contains(equalTo("parameter")))
     }
 
     @Test
@@ -100,6 +116,7 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
+        assertThat(matches[0].names, contains(equalTo("parameter")))
     }
 
     @Test
@@ -114,6 +131,7 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
+        assertThat(matches[0].names, contains(equalTo("parameter")))
     }
 
     @Test
@@ -127,6 +145,7 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
+        assertThat(matches[0].names, contains(equalTo("parameter")))
     }
 
     @Test
@@ -141,6 +160,7 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
+        assertThat(matches[0].names, contains(equalTo("parameter")))
     }
 
     @Test
@@ -155,5 +175,6 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
+        assertThat(matches[0].names, contains(equalTo("paths.parameter")))
     }
 }

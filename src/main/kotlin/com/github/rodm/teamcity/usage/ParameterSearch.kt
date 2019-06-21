@@ -30,12 +30,14 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                 val optionValue = buildType.getOption(option).toString()
                 val names = matcher.getMatchingNames(optionValue)
                 if (names.isNotEmpty()) {
+                    buildTypeResult.names.addAll(names)
                     results.putIfAbsent(buildType.externalId, buildTypeResult)
                 }
             }
             buildType.ownParameters.forEach { parameter ->
                 val names = matcher.getMatchingNames(parameter.value)
                 if (names.isNotEmpty()) {
+                    buildTypeResult.names.addAll(names)
                     results.putIfAbsent(buildType.externalId, buildTypeResult)
                 }
             }
@@ -43,6 +45,7 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                 runner.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
                     if (names.isNotEmpty()) {
+                        buildTypeResult.names.addAll(names)
                         results.putIfAbsent(buildType.externalId, buildTypeResult)
                     }
                 }
@@ -51,6 +54,7 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                 feature.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
                     if (names.isNotEmpty()) {
+                        buildTypeResult.names.addAll(names)
                         results.putIfAbsent(buildType.externalId, buildTypeResult)
                     }
                 }
@@ -60,6 +64,7 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                     val optionValue = dependency.getOption(option).toString()
                     val names = matcher.getMatchingNames(optionValue)
                     if (names.isNotEmpty()) {
+                        buildTypeResult.names.addAll(names)
                         results.putIfAbsent(buildType.externalId, buildTypeResult)
                     }
                 }
@@ -67,12 +72,14 @@ class ParameterSearch(private val parameter: String, private val project: SProje
             buildType.artifactDependencies.forEach { dependency ->
                 val names = matcher.getMatchingNames(dependency.sourcePaths)
                 if (names.isNotEmpty()) {
+                    buildTypeResult.names.addAll(names)
                     results.putIfAbsent(buildType.externalId, buildTypeResult)
                 }
             }
             buildType.requirements.forEach { requirement ->
                 val names = matcher.getMatchingNames(requirement.propertyValue ?: "")
                 if (names.isNotEmpty()) {
+                    buildTypeResult.names.addAll(names)
                     results.putIfAbsent(buildType.externalId, buildTypeResult)
                 }
             }
