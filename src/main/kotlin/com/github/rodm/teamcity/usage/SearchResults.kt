@@ -25,6 +25,11 @@ class SearchResults(elements: Collection<SearchResult>): ArrayList<SearchResult>
             val resultElement = Element("result")
             resultElement.setAttribute("id", result.externalId)
             resultElement.setAttribute("name", result.fullName)
+            result.names.forEach { name ->
+                val nameElement = Element("name")
+                nameElement.setAttribute("value", name)
+                resultElement.addContent(nameElement)
+            }
             root.addContent(resultElement)
         }
     }

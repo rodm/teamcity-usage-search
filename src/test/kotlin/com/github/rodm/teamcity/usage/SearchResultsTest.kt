@@ -18,8 +18,7 @@ package com.github.rodm.teamcity.usage
 
 import jetbrains.buildServer.controllers.XmlResponseUtil
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.hasSize
+import org.hamcrest.Matchers.*
 import org.jdom.Element
 import org.junit.jupiter.api.Test
 
@@ -66,5 +65,20 @@ class SearchResultsTest {
         val result = nodes[1] as Element
         assertThat(result.getAttributeValue("id") as String, equalTo("extId2"))
         assertThat(result.getAttributeValue("name") as String, equalTo("build name 2"))
+    }
+
+    @Test
+    fun `serialize search result outputs names of matching parameters`() {
+        val xmlResponse = XmlResponseUtil.newXmlResponse()
+        val searchResult = SearchResult("extId", "build name")
+        searchResult.names.addAll(listOf("param1", "param2"))
+        val results = SearchResults(listOf(searchResult))
+
+        results.serialize(xmlResponse)
+
+        val nodes = xmlResponse.getChildren("result")
+        val result = nodes[0] as Element
+        val names = result.getChildren("name").map { (it as Element).getAttributeValue("value") }.toList()
+        assertThat(names, containsInAnyOrder(equalTo("param1"), equalTo("param2")))
     }
 }
