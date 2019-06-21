@@ -48,12 +48,17 @@ BS.UsageSearch = {
                 var matches = response.getElementsByTagName('result');
 
                 for (var i = 0; i < matches.length; i++) {
+                    var match = matches[i];
                     var newRow = buildTypeTemplate.clone();
                     var link = newRow.find('a');
                     link.attr('href', function () {
-                        return $j(this).attr('href').replace('##BUILD_TYPE_ID##', matches[i].getAttribute('id'));
+                        return $j(this).attr('href').replace('##BUILD_TYPE_ID##', match.getAttribute('id'));
                     });
-                    link.text(matches[i].getAttribute('name'));
+                    link.text(match.getAttribute('name'));
+                    var names = $j(match.getElementsByTagName('name')).map(function() {
+                        return $j(this).attr('value');
+                    }).toArray();
+                    $j('<td></td>').text('Uses ' + names.join(', ')).appendTo(newRow);
                     results.append(newRow);
                 }
             }
