@@ -55,10 +55,18 @@ BS.UsageSearch = {
                         return $j(this).attr('href').replace('##BUILD_TYPE_ID##', match.getAttribute('id'));
                     });
                     link.text(match.getAttribute('name'));
-                    var names = $j(match.getElementsByTagName('name')).map(function() {
-                        return $j(this).attr('value');
+                    var sections = $j(match.getElementsByTagName('section')).map(function() {
+                        return this;
                     }).toArray();
-                    $j('<td></td>').text('Uses ' + names.join(', ')).appendTo(newRow);
+                    var cell = $j('<td></td>');
+                    for (var j = 0; j < sections.length; j++) {
+                        var section = sections[j];
+                        var names = $j(section.getElementsByTagName('name')).map(function () {
+                            return $j(this).attr('value');
+                        }).toArray();
+                        $j('<div></div>').text('Uses ' + names.join(', ') + ' in ' + $j(section).attr('name')).appendTo(cell);
+                    }
+                    cell.appendTo(newRow);
                     results.append(newRow);
                 }
             }
