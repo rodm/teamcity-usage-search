@@ -29,59 +29,41 @@ class ParameterSearch(private val parameter: String, private val project: SProje
             buildType.ownOptions.forEach { option ->
                 val optionValue = buildType.getOption(option).toString()
                 val names = matcher.getMatchingNames(optionValue)
-                if (names.isNotEmpty()) {
-                    buildTypeResult.names.addAll(names)
-                    results.putIfAbsent(buildType.externalId, buildTypeResult)
-                }
+                buildTypeResult.names.addAll(names)
             }
             buildType.ownParameters.forEach { parameter ->
                 val names = matcher.getMatchingNames(parameter.value)
-                if (names.isNotEmpty()) {
-                    buildTypeResult.names.addAll(names)
-                    results.putIfAbsent(buildType.externalId, buildTypeResult)
-                }
+                buildTypeResult.names.addAll(names)
             }
             buildType.buildRunners.forEach { runner ->
                 runner.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
-                    if (names.isNotEmpty()) {
-                        buildTypeResult.names.addAll(names)
-                        results.putIfAbsent(buildType.externalId, buildTypeResult)
-                    }
+                    buildTypeResult.names.addAll(names)
                 }
             }
             buildType.buildFeatures.forEach { feature ->
                 feature.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
-                    if (names.isNotEmpty()) {
-                        buildTypeResult.names.addAll(names)
-                        results.putIfAbsent(buildType.externalId, buildTypeResult)
-                    }
+                    buildTypeResult.names.addAll(names)
                 }
             }
             buildType.ownDependencies.forEach { dependency ->
                 dependency.ownOptions.forEach { option ->
                     val optionValue = dependency.getOption(option).toString()
                     val names = matcher.getMatchingNames(optionValue)
-                    if (names.isNotEmpty()) {
-                        buildTypeResult.names.addAll(names)
-                        results.putIfAbsent(buildType.externalId, buildTypeResult)
-                    }
+                    buildTypeResult.names.addAll(names)
                 }
             }
             buildType.artifactDependencies.forEach { dependency ->
                 val names = matcher.getMatchingNames(dependency.sourcePaths)
-                if (names.isNotEmpty()) {
-                    buildTypeResult.names.addAll(names)
-                    results.putIfAbsent(buildType.externalId, buildTypeResult)
-                }
+                buildTypeResult.names.addAll(names)
             }
             buildType.requirements.forEach { requirement ->
                 val names = matcher.getMatchingNames(requirement.propertyValue ?: "")
-                if (names.isNotEmpty()) {
-                    buildTypeResult.names.addAll(names)
-                    results.putIfAbsent(buildType.externalId, buildTypeResult)
-                }
+                buildTypeResult.names.addAll(names)
+            }
+            if (buildTypeResult.names.isNotEmpty()) {
+                results.putIfAbsent(buildType.externalId, buildTypeResult)
             }
         }
         return SearchResults(results.values)
