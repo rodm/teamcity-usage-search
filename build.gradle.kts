@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.github.rodm"
-version = "0.3"
+version = "0.4-SNAPSHOT"
 
 extra["teamcityVersion"] = findProperty("teamcity.api.version") as String? ?: "2019.1"
 
@@ -60,6 +60,10 @@ teamcity {
             email = "rod.n.mackenzie@gmail.com"
             useSeparateClassloader = true
             minimumBuild = "65998"
+        }
+
+        publish {
+            token = findProperty("jetbrains.token") as String?
         }
     }
 
