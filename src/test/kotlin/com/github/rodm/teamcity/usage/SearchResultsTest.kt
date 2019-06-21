@@ -25,6 +25,64 @@ import org.junit.jupiter.api.Test
 class SearchResultsTest {
 
     @Test
+    fun `captures matching names by configuration section`() {
+        val result = SearchResult("id", "name")
+
+        result.namesFor("General Settings", listOf("param1", "param2"))
+        
+        assertThat(result.namesBySection.keys, hasSize(1))
+        assertThat(result.namesBySection["General Settings"], containsInAnyOrder(equalTo("param1"), equalTo("param2")))
+    }
+
+    @Test
+    fun `captures matching names by configuration in section order`() {
+        val result = SearchResult("id", "name")
+
+        result.namesFor("General Settings", listOf("param1"))
+        result.namesFor("Build Features", listOf("param1"))
+
+        val sections = result.namesBySection.keys.toList()
+        assertThat(sections, hasSize(2))
+        assertThat(sections[0], equalTo("General Settings"))
+        assertThat(sections[1], equalTo("Build Features"))
+    }
+
+    @Test
+    fun `captured matching names are not duplicated in a section`() {
+        val result = SearchResult("id", "name")
+
+        result.namesFor("Build Steps", listOf("param1"))
+        result.namesFor("Build Steps", listOf("param1"))
+
+        val buildSteps = result.namesBySection["Build Steps"]
+        assertThat(buildSteps, hasSize(1))
+    }
+
+    @Test
+    fun `empty matching names are not captured`() {
+        val result = SearchResult("id", "name")
+
+        result.namesFor("Build Steps", listOf())
+
+        assertThat(result.namesBySection.keys, hasSize(0))
+    }
+
+    @Test
+    fun `search result with no matches`() {
+        val result = SearchResult("id", "name")
+
+        assertThat(result.hasMatches(), `is`(false))
+    }
+
+    @Test
+    fun `search result with matches`() {
+        val result = SearchResult("id", "name")
+        result.namesFor("General Settings", listOf("param1"))
+
+        assertThat(result.hasMatches(), `is`(true))
+    }
+
+    @Test
     fun `serialize empty search results returns no result elements`() {
         val xmlResponse = XmlResponseUtil.newXmlResponse()
         val results = SearchResults(listOf())
@@ -80,5 +138,44 @@ class SearchResultsTest {
         val result = nodes[0] as Element
         val names = result.getChildren("name").map { (it as Element).getAttributeValue("value") }.toList()
         assertThat(names, containsInAnyOrder(equalTo("param1"), equalTo("param2")))
+    }
+
+    @Test
+    fun `serialize search result outputs sections for matching parameters`() {
+        val xmlResponse = XmlResponseUtil.newXmlResponse()
+        val searchResult = SearchResult("extId", "build name")
+        searchResult.namesFor("General Settings", listOf("param1", "param2"))
+        searchResult.namesFor("Build Steps", listOf("param1", "param3"))
+        val results = SearchResults(listOf(searchResult))
+
+        results.serialize(xmlResponse)
+
+        val nodes = xmlResponse.getChildren("result")
+        val result = nodes[0] as Element
+        val sections = result.getChildren("section").map { (it as Element).getAttributeValue("name") }
+        assertThat(sections, contains(equalTo("General Settings"), equalTo("Build Steps")))
+    }
+
+    private fun namesFrom(element: Element): List<String> {
+        return element.getChildren("name").map { (it as Element).getAttributeValue("value") }.toList()
+    }
+
+    @Test
+    fun `serialize search result outputs names for each section for matching parameters`() {
+        val xmlResponse = XmlResponseUtil.newXmlResponse()
+        val searchResult = SearchResult("extId", "build name")
+        searchResult.namesFor("General Settings", listOf("param1", "param2"))
+        searchResult.namesFor("Build Steps", listOf("param1", "param3"))
+        val results = SearchResults(listOf(searchResult))
+
+        results.serialize(xmlResponse)
+
+        val nodes = xmlResponse.getChildren("result")
+        val result = nodes[0] as Element
+        val sections = result.getChildren("section")
+        val names1 = namesFrom(sections[0] as Element)
+        assertThat(names1, contains(equalTo("param1"), equalTo("param2")))
+        val names2 = namesFrom(sections[1] as Element)
+        assertThat(names2, contains(equalTo("param1"), equalTo("param3")))
     }
 }

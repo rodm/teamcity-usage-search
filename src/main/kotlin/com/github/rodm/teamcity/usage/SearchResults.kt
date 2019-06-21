@@ -30,6 +30,16 @@ class SearchResults(elements: Collection<SearchResult>): ArrayList<SearchResult>
                 nameElement.setAttribute("value", name)
                 resultElement.addContent(nameElement)
             }
+            result.namesBySection.forEach { section ->
+                val sectionElement = Element("section")
+                sectionElement.setAttribute("name", section.key)
+                section.value.forEach { name ->
+                    val nameElement = Element("name")
+                    nameElement.setAttribute("value", name)
+                    sectionElement.addContent(nameElement)
+                }
+                resultElement.addContent(sectionElement)
+            }
             root.addContent(resultElement)
         }
     }
@@ -37,4 +47,19 @@ class SearchResults(elements: Collection<SearchResult>): ArrayList<SearchResult>
 
 data class SearchResult(val externalId: String, val fullName: String) {
     val names: MutableList<String> = mutableListOf()
+    val namesBySection = LinkedHashMap<String, LinkedHashSet<String>>()
+
+    fun namesFor(section: String, names: List<String>) {
+        if (names.isNotEmpty()) {
+            if (namesBySection.containsKey(section)) {
+                namesBySection[section]?.addAll(names)
+            } else {
+                namesBySection[section] = LinkedHashSet(names)
+            }
+        }
+    }
+
+    fun hasMatches(): Boolean {
+        return namesBySection.isNotEmpty()
+    }
 }
