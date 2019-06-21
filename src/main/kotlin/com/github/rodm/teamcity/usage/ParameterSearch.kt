@@ -29,40 +29,40 @@ class ParameterSearch(private val parameter: String, private val project: SProje
             buildType.ownOptions.forEach { option ->
                 val optionValue = buildType.getOption(option).toString()
                 val names = matcher.getMatchingNames(optionValue)
-                buildTypeResult.names.addAll(names)
+                buildTypeResult.namesFor("General Settings", names)
             }
             buildType.ownParameters.forEach { parameter ->
                 val names = matcher.getMatchingNames(parameter.value)
-                buildTypeResult.names.addAll(names)
+                buildTypeResult.namesFor("Parameters", names)
             }
             buildType.buildRunners.forEach { runner ->
                 runner.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
-                    buildTypeResult.names.addAll(names)
+                    buildTypeResult.namesFor("Build Steps", names)
                 }
             }
             buildType.buildFeatures.forEach { feature ->
                 feature.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
-                    buildTypeResult.names.addAll(names)
+                    buildTypeResult.namesFor("Build Features", names)
                 }
             }
             buildType.ownDependencies.forEach { dependency ->
                 dependency.ownOptions.forEach { option ->
                     val optionValue = dependency.getOption(option).toString()
                     val names = matcher.getMatchingNames(optionValue)
-                    buildTypeResult.names.addAll(names)
+                    buildTypeResult.namesFor("Dependencies", names)
                 }
             }
             buildType.artifactDependencies.forEach { dependency ->
                 val names = matcher.getMatchingNames(dependency.sourcePaths)
-                buildTypeResult.names.addAll(names)
+                buildTypeResult.namesFor("Dependencies", names)
             }
             buildType.requirements.forEach { requirement ->
                 val names = matcher.getMatchingNames(requirement.propertyValue ?: "")
-                buildTypeResult.names.addAll(names)
+                buildTypeResult.namesFor("Agent Requirements", names)
             }
-            if (buildTypeResult.names.isNotEmpty()) {
+            if (buildTypeResult.hasMatches()) {
                 results.putIfAbsent(buildType.externalId, buildTypeResult)
             }
         }

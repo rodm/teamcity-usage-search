@@ -73,7 +73,7 @@ class ParameterSearchTest {
         val matches = searcher.findMatchingBuildTypes()
 
         assertThat(matches[0], equalTo(searchResult(buildType)))
-        assertThat(matches[0].names, containsInAnyOrder(equalTo("parameter1"), equalTo("param3")))
+        assertThat(matches[0].namesBySection["Parameters"], containsInAnyOrder(equalTo("parameter1"), equalTo("param3")))
     }
     
     @Test
@@ -88,7 +88,7 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
-        assertThat(matches[0].names, contains(equalTo("parameter")))
+        assertThat(matches[0].namesBySection["Build Steps"], contains(equalTo("parameter")))
     }
 
     @Test
@@ -116,7 +116,7 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
-        assertThat(matches[0].names, contains(equalTo("parameter")))
+        assertThat(matches[0].namesBySection["Build Features"], contains(equalTo("parameter")))
     }
 
     @Test
@@ -131,7 +131,7 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
-        assertThat(matches[0].names, contains(equalTo("parameter")))
+        assertThat(matches[0].namesBySection["Agent Requirements"], contains(equalTo("parameter")))
     }
 
     @Test
@@ -145,7 +145,7 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
-        assertThat(matches[0].names, contains(equalTo("parameter")))
+        assertThat(matches[0].namesBySection["General Settings"], contains(equalTo("parameter")))
     }
 
     @Test
@@ -160,7 +160,7 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
-        assertThat(matches[0].names, contains(equalTo("parameter")))
+        assertThat(matches[0].namesBySection["Dependencies"], contains(equalTo("parameter")))
     }
 
     @Test
@@ -175,6 +175,6 @@ class ParameterSearchTest {
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildType)))
-        assertThat(matches[0].names, contains(equalTo("paths.parameter")))
+        assertThat(matches[0].namesBySection["Dependencies"], contains(equalTo("paths.parameter")))
     }
 }

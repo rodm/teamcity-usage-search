@@ -126,21 +126,6 @@ class SearchResultsTest {
     }
 
     @Test
-    fun `serialize search result outputs names of matching parameters`() {
-        val xmlResponse = XmlResponseUtil.newXmlResponse()
-        val searchResult = SearchResult("extId", "build name")
-        searchResult.names.addAll(listOf("param1", "param2"))
-        val results = SearchResults(listOf(searchResult))
-
-        results.serialize(xmlResponse)
-
-        val nodes = xmlResponse.getChildren("result")
-        val result = nodes[0] as Element
-        val names = result.getChildren("name").map { (it as Element).getAttributeValue("value") }.toList()
-        assertThat(names, containsInAnyOrder(equalTo("param1"), equalTo("param2")))
-    }
-
-    @Test
     fun `serialize search result outputs sections for matching parameters`() {
         val xmlResponse = XmlResponseUtil.newXmlResponse()
         val searchResult = SearchResult("extId", "build name")

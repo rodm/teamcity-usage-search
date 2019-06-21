@@ -25,11 +25,6 @@ class SearchResults(elements: Collection<SearchResult>): ArrayList<SearchResult>
             val resultElement = Element("result")
             resultElement.setAttribute("id", result.externalId)
             resultElement.setAttribute("name", result.fullName)
-            result.names.forEach { name ->
-                val nameElement = Element("name")
-                nameElement.setAttribute("value", name)
-                resultElement.addContent(nameElement)
-            }
             result.namesBySection.forEach { section ->
                 val sectionElement = Element("section")
                 sectionElement.setAttribute("name", section.key)
@@ -46,7 +41,6 @@ class SearchResults(elements: Collection<SearchResult>): ArrayList<SearchResult>
 }
 
 data class SearchResult(val externalId: String, val fullName: String) {
-    val names: MutableList<String> = mutableListOf()
     val namesBySection = LinkedHashMap<String, LinkedHashSet<String>>()
 
     fun namesFor(section: String, names: List<String>) {
