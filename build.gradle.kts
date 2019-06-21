@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.github.rodm"
-version = "0.4-SNAPSHOT"
+version = "0.4"
 
 extra["teamcityVersion"] = findProperty("teamcity.api.version") as String? ?: "2019.1"
 
@@ -63,6 +63,7 @@ teamcity {
         }
 
         publish {
+            channels = listOf("Beta")
             token = findProperty("jetbrains.token") as String?
         }
     }
