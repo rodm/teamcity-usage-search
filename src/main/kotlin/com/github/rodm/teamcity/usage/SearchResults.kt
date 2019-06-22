@@ -42,6 +42,7 @@ class SearchResults(elements: Collection<SearchResult>): ArrayList<SearchResult>
 }
 
 enum class Type {
+    PROJECT,
     BUILD,
     TEMPLATE
 }

@@ -132,6 +132,18 @@ class SearchResultsTest {
     }
 
     @Test
+    fun `serialize search results with project returns result element with project type attribute`() {
+        val xmlResponse = XmlResponseUtil.newXmlResponse()
+        val results = SearchResults(listOf(SearchResult("extId", "project name", Type.PROJECT)))
+
+        results.serialize(xmlResponse)
+
+        val nodes = xmlResponse.getChildren("result")
+        val result = nodes[0] as Element
+        assertThat(result.getAttributeValue("type") as String, equalTo("PROJECT"))
+    }
+
+    @Test
     fun `serialize search results returns result element for each build type`() {
         val xmlResponse = XmlResponseUtil.newXmlResponse()
         val results = SearchResults(
