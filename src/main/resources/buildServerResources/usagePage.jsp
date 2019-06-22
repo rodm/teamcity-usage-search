@@ -60,6 +60,9 @@
             <tr id="usageResultBuildTypeTemplate">
                 <td><admin:editBuildTypeLink buildTypeId="##BUILD_TYPE_ID##">NAME</admin:editBuildTypeLink></td>
             </tr>
+            <tr id="usageResultBuildTemplateTemplate">
+                <td><admin:editTemplateLink templateId="##BUILD_TYPE_ID##">NAME</admin:editTemplateLink></td>
+            </tr>
         </tbody>
     </table>
 </div>

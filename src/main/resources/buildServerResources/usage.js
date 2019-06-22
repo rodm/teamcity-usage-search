@@ -44,12 +44,16 @@ BS.UsageSearch = {
                 console.log("response: ", transport);
 
                 var buildTypeTemplate = $j('#usageResultBuildTypeTemplate');
+                var buildTemplateTemplate = $j('#usageResultBuildTemplateTemplate');
                 var response = BS.Util.documentRoot(transport);
                 var matches = response.getElementsByTagName('result');
 
                 for (var i = 0; i < matches.length; i++) {
                     var match = matches[i];
                     var newRow = buildTypeTemplate.clone();
+                    if ($j(match).attr('type') === "TEMPLATE") {
+                        newRow = buildTemplateTemplate.clone();
+                    }
                     var link = newRow.find('a');
                     link.attr('href', function () {
                         return $j(this).attr('href').replace('##BUILD_TYPE_ID##', match.getAttribute('id'));
