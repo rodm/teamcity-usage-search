@@ -59,15 +59,22 @@ fun artifactDependency(): FakeArtifactDependency = FakeArtifactDependency()
 
 class FakeProject: SProject by Mockito.mock(SProject::class.java) {
 
+    private val subProjects = mutableListOf<SProject>()
     private val buildTypes: MutableList<SBuildType> = mutableListOf()
     private val ownBuildTemplates = mutableListOf<BuildTypeTemplate>()
     private val ownParams: MutableMap<String, String> = mutableMapOf()
 
     override fun getExternalId(): String = "projectId"
     override fun getFullName(): String = "project name"
+    override fun getOwnProjects(): MutableList<SProject> = subProjects
     override fun getBuildTypes(): MutableList<SBuildType> = buildTypes
     override fun getOwnBuildTypeTemplates(): MutableList<BuildTypeTemplate> = ownBuildTemplates
     override fun getOwnParameters(): MutableMap<String, String> = ownParams
+
+    fun withSubProject(project: SProject): FakeProject {
+        subProjects.add(project)
+        return this
+    }
 
     fun withBuildType(buildType: SBuildType): FakeProject {
         buildTypes.add(buildType)

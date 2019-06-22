@@ -18,12 +18,17 @@ package com.github.rodm.teamcity.usage
 
 import jetbrains.buildServer.serverSide.SProject
 
-class ParameterSearch(private val parameter: String, private val project: SProject) {
+class ParameterSearch(parameter: String, private val project: SProject) {
+
+    private val matcher = ParameterMatcher(parameter)
 
     fun findMatches(): SearchResults {
         val results = mutableListOf<SearchResult>()
-        val matcher = ParameterMatcher(parameter)
+        findMatches(project, results)
+        return SearchResults(results)
+    }
 
+    private fun findMatches(project: SProject, results: MutableList<SearchResult>) {
         val projectResult = SearchResult(project.externalId, project.fullName, Type.PROJECT)
         project.ownParameters.forEach { parameter ->
             val names = matcher.getMatchingNames(parameter.value)
@@ -119,6 +124,9 @@ class ParameterSearch(private val parameter: String, private val project: SProje
                 results.add(result)
             }
         }
-        return SearchResults(results)
+
+        project.ownProjects.forEach { subProject ->
+            findMatches(subProject, results)
+        }
     }
 }

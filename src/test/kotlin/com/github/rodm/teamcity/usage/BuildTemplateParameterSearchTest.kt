@@ -65,6 +65,20 @@ class BuildTemplateParameterSearchTest {
     }
 
     @Test
+    fun `search for parameter referenced by a build template in a subproject`() {
+        val buildTemplate = buildTemplate().withOwnParameters(mapOf("param1" to "%parameter%"))
+        val subProject = project().withBuildTemplate(buildTemplate)
+        val project = project().withSubProject(subProject)
+
+        val searchFor = "parameter"
+        val searcher = ParameterSearch(searchFor, project)
+        val matches = searcher.findMatches()
+
+        assertThat(matches, hasSize(1))
+        assertThat(matches[0], equalTo(searchResult(buildTemplate)))
+    }
+    
+    @Test
     fun `search for parameter returns result with matching names`() {
         val buildTemplate = buildTemplate().withOwnParameters(mapOf("param1" to "%parameter1%", "param2" to "%prop2% %param3%"))
         val project = project().withBuildTemplate(buildTemplate)

@@ -46,4 +46,17 @@ class ProjectParameterSearchTest {
 
         assertThat(matches, hasSize(0))
     }
+
+    @Test
+    fun `search for parameter referenced by in a subproject`() {
+        val subProject = project().withOwnParameters(mapOf("param1" to "%parameter%"))
+        val project = project().withSubProject(subProject)
+
+        val searchFor = "parameter"
+        val searcher = ParameterSearch(searchFor, project)
+        val matches = searcher.findMatches()
+
+        assertThat(matches, hasSize(1))
+        assertThat(matches[0], equalTo(searchResult(subProject)))
+    }
 }
