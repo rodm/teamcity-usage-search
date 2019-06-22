@@ -23,7 +23,7 @@ import org.hamcrest.Matchers.contains
 import org.hamcrest.Matchers.containsInAnyOrder
 import org.junit.jupiter.api.Test
 
-class ParameterSearchTest {
+class BuildTypeParameterSearchTest {
 
     @Test
     fun `search for parameter not referenced by a build configuration returns no matches`() {
