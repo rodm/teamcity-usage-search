@@ -24,6 +24,15 @@ class ParameterSearch(private val parameter: String, private val project: SProje
         val results = mutableListOf<SearchResult>()
         val matcher = ParameterMatcher(parameter)
 
+        val projectResult = SearchResult(project.externalId, project.fullName)
+        project.ownParameters.forEach { parameter ->
+            val names = matcher.getMatchingNames(parameter.value)
+            projectResult.namesFor("Parameters", names)
+        }
+        if (projectResult.hasMatches()) {
+            results.add(projectResult)
+        }
+
         project.ownBuildTypeTemplates.forEach { template ->
             val result = SearchResult(template.externalId, template.fullName, Type.TEMPLATE)
 

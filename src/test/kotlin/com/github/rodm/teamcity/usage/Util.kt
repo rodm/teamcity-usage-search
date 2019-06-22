@@ -33,6 +33,8 @@ fun searchResult(buildType: BuildTypeIdentity): SearchResult {
     return SearchResult(buildType.externalId, buildType.fullName, type)
 }
 
+fun searchResult(project: SProject): SearchResult = SearchResult(project.externalId, project.fullName)
+
 fun project(): FakeProject {
     return FakeProject()
 }
@@ -59,12 +61,13 @@ class FakeProject: SProject by Mockito.mock(SProject::class.java) {
 
     private val buildTypes: MutableList<SBuildType> = mutableListOf()
     private val ownBuildTemplates = mutableListOf<BuildTypeTemplate>()
+    private val ownParams: MutableMap<String, String> = mutableMapOf()
 
-    override fun getBuildTypes(): MutableList<SBuildType> {
-        return buildTypes
-    }
-
+    override fun getExternalId(): String = "projectId"
+    override fun getFullName(): String = "project name"
+    override fun getBuildTypes(): MutableList<SBuildType> = buildTypes
     override fun getOwnBuildTypeTemplates(): MutableList<BuildTypeTemplate> = ownBuildTemplates
+    override fun getOwnParameters(): MutableMap<String, String> = ownParams
 
     fun withBuildType(buildType: SBuildType): FakeProject {
         buildTypes.add(buildType)
@@ -73,6 +76,12 @@ class FakeProject: SProject by Mockito.mock(SProject::class.java) {
 
     fun withBuildTemplate(template: BuildTypeTemplate): FakeProject {
         ownBuildTemplates.add(template)
+        return this
+    }
+
+    fun withOwnParameters(parameters: Map<String, String>): FakeProject {
+        ownParams.clear()
+        ownParams.putAll(parameters)
         return this
     }
 }
