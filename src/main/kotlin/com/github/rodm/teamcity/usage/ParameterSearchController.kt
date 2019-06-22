@@ -47,7 +47,7 @@ class ParameterSearchController(buildServer: SBuildServer, controllerManager: We
 
             if (project != null) {
                 val searcher = ParameterSearch(searchFor, project)
-                val results = searcher.findMatchingBuildTypes()
+                val results = searcher.findMatches()
                 ajaxResponse?.apply { results.serialize(ajaxResponse) }
             }
         }

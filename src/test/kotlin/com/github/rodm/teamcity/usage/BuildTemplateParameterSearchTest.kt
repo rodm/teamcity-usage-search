@@ -32,7 +32,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(0))
     }
@@ -44,7 +44,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
@@ -58,7 +58,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(0))
     }
@@ -70,7 +70,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "param"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
         assertThat(matches[0].namesBySection["Parameters"], containsInAnyOrder(equalTo("parameter1"), equalTo("param3")))
@@ -84,7 +84,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
@@ -99,7 +99,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(0))
     }
@@ -112,7 +112,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
@@ -127,7 +127,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
@@ -141,7 +141,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
@@ -156,7 +156,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
@@ -171,7 +171,7 @@ class BuildTemplateParameterSearchTest {
 
         val searchFor = "parameter"
         val searcher = ParameterSearch(searchFor, project)
-        val matches = searcher.findMatchingBuildTypes()
+        val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))

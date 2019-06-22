@@ -20,7 +20,7 @@ import jetbrains.buildServer.serverSide.SProject
 
 class ParameterSearch(private val parameter: String, private val project: SProject) {
 
-    fun findMatchingBuildTypes(): SearchResults {
+    fun findMatches(): SearchResults {
         val results = mutableListOf<SearchResult>()
         val matcher = ParameterMatcher(parameter)
 
