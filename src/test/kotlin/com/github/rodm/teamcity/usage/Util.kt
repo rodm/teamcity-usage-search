@@ -18,17 +18,14 @@ package com.github.rodm.teamcity.usage
 
 import jetbrains.buildServer.requirements.Requirement
 import jetbrains.buildServer.requirements.RequirementType.EQUALS
-import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
-import jetbrains.buildServer.serverSide.SBuildRunnerDescriptor
-import jetbrains.buildServer.serverSide.SBuildType
-import jetbrains.buildServer.serverSide.SProject
+import jetbrains.buildServer.serverSide.*
 import jetbrains.buildServer.serverSide.artifacts.SArtifactDependency
 import jetbrains.buildServer.serverSide.dependency.Dependency
 import jetbrains.buildServer.util.Option
 import jetbrains.buildServer.util.StringOption
 import org.mockito.Mockito
 
-fun searchResult(buildType: SBuildType): SearchResult = SearchResult(buildType.externalId, buildType.fullName)
+fun searchResult(buildType: BuildTypeIdentity): SearchResult = SearchResult(buildType.externalId, buildType.fullName)
 
 fun project(): FakeProject {
     return FakeProject()
@@ -37,6 +34,8 @@ fun project(): FakeProject {
 fun buildType(): FakeBuildType {
     return FakeBuildType()
 }
+
+fun buildTemplate(): FakeBuildTemplate = FakeBuildTemplate()
 
 fun buildFeature(): FakeBuildFeature {
     return FakeBuildFeature()
@@ -53,13 +52,21 @@ fun artifactDependency(): FakeArtifactDependency = FakeArtifactDependency()
 class FakeProject: SProject by Mockito.mock(SProject::class.java) {
 
     private val buildTypes: MutableList<SBuildType> = mutableListOf()
+    private val ownBuildTemplates = mutableListOf<BuildTypeTemplate>()
 
     override fun getBuildTypes(): MutableList<SBuildType> {
         return buildTypes
     }
 
+    override fun getOwnBuildTypeTemplates(): MutableList<BuildTypeTemplate> = ownBuildTemplates
+
     fun withBuildType(buildType: SBuildType): FakeProject {
         buildTypes.add(buildType)
+        return this
+    }
+
+    fun withBuildTemplate(template: BuildTypeTemplate): FakeProject {
+        ownBuildTemplates.add(template)
         return this
     }
 }
@@ -154,6 +161,84 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
     }
 
     fun withArtifactDependency(dependency: SArtifactDependency): FakeBuildType {
+        artifactDependencies.add(dependency)
+        return this
+    }
+}
+
+class FakeBuildTemplate: BuildTypeTemplate by Mockito.mock(BuildTypeTemplate::class.java) {
+
+    private val ownParams = mutableMapOf<String, String>()
+    private val params = mutableMapOf<String, String>()
+    private val runners = mutableListOf<SBuildRunnerDescriptor>()
+    private val features = mutableListOf<SBuildFeatureDescriptor>()
+    private val requirements = mutableListOf<Requirement>()
+    private val ownOptions = mutableMapOf<String, String>()
+    private val dependencies = mutableListOf<Dependency>()
+    private val artifactDependencies = mutableListOf<SArtifactDependency>()
+
+    override fun getExternalId(): String = "templateId"
+    override fun getFullName(): String = "template name"
+
+    override fun getOwnOptions(): MutableCollection<Option<Any>> {
+        return ownOptions.keys.map { key -> StringOption(key, "") }.toMutableList() as MutableCollection<Option<Any>>
+    }
+
+    override fun <T : Any?> getOption(option: Option<T>): T {
+        return (ownOptions[option.key] ?: option.defaultValue) as T
+    }
+
+    override fun addBuildRunner(name: String, runnerType: String, parameters: MutableMap<String, String>): SBuildRunnerDescriptor {
+        val runner = FakeBuildRunner()
+        runner.setParameters(parameters)
+        runners.add(runner)
+        return runner
+    }
+
+    override fun getBuildRunners(): MutableList<SBuildRunnerDescriptor> = runners
+
+    override fun getOwnParameters(): MutableMap<String, String> = ownParams
+
+    override fun getBuildFeatures(): MutableCollection<SBuildFeatureDescriptor> = features
+
+    override fun getDependencies(): MutableList<Dependency> = dependencies
+
+    override fun getArtifactDependencies(): MutableList<SArtifactDependency> = artifactDependencies
+
+    override fun getRequirements(): MutableList<Requirement> = requirements
+
+    fun setParameters(parameters: Map<String, String>) {
+        params.clear()
+        params.putAll(parameters)
+    }
+
+    fun withOwnParameters(parameters: Map<String, String>): FakeBuildTemplate {
+        ownParams.clear()
+        ownParams.putAll(parameters)
+        return this
+    }
+
+    fun withBuildFeature(feature: SBuildFeatureDescriptor): FakeBuildTemplate {
+        features.add(feature)
+        return this
+    }
+
+    fun withRequirement(requirement: Requirement): FakeBuildTemplate {
+        requirements.add(requirement)
+        return this
+    }
+
+    fun withOption(name: String, value: String): FakeBuildTemplate {
+        ownOptions[name] = value
+        return this
+    }
+
+    fun withDependency(dependency: Dependency): FakeBuildTemplate {
+        dependencies.add(dependency)
+        return this
+    }
+
+    fun withArtifactDependency(dependency: SArtifactDependency): FakeBuildTemplate {
         artifactDependencies.add(dependency)
         return this
     }

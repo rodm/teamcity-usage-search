@@ -24,6 +24,50 @@ class ParameterSearch(private val parameter: String, private val project: SProje
         val results = mutableListOf<SearchResult>()
         val matcher = ParameterMatcher(parameter)
 
+        project.ownBuildTypeTemplates.forEach { template ->
+            val result = SearchResult(template.externalId, template.fullName)
+
+            template.ownOptions.forEach { option ->
+                val optionValue = template.getOption(option).toString()
+                val names = matcher.getMatchingNames(optionValue)
+                result.namesFor("General Settings", names)
+            }
+            template.ownParameters.forEach { parameter ->
+                val names = matcher.getMatchingNames(parameter.value)
+                result.namesFor("Parameters", names)
+            }
+
+            template.buildRunners.forEach { runner ->
+                runner.parameters.forEach { parameter ->
+                    val names = matcher.getMatchingNames(parameter.value)
+                    result.namesFor("Build Steps", names)
+                }
+            }
+            template.buildFeatures.forEach { feature ->
+                feature.parameters.forEach { parameter ->
+                    val names = matcher.getMatchingNames(parameter.value)
+                    result.namesFor("Build Features", names)
+                }
+            }
+            template.dependencies.forEach { dependency ->
+                dependency.ownOptions.forEach { option ->
+                    val optionValue = dependency.getOption(option).toString()
+                    val names = matcher.getMatchingNames(optionValue)
+                    result.namesFor("Dependencies", names)
+                }
+            }
+            template.artifactDependencies.forEach { dependency ->
+                val names = matcher.getMatchingNames(dependency.sourcePaths)
+                result.namesFor("Dependencies", names)
+            }
+            template.requirements.forEach { requirement ->
+                val names = matcher.getMatchingNames(requirement.propertyValue ?: "")
+                result.namesFor("Agent Requirements", names)
+            }
+            if (result.hasMatches()) {
+                results.add(result)
+            }
+        }
         project.buildTypes.forEach { buildType ->
             val result = SearchResult(buildType.externalId, buildType.fullName)
             buildType.ownOptions.forEach { option ->
