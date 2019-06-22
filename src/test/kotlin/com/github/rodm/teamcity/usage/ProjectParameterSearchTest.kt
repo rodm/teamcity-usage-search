@@ -32,6 +32,7 @@ class ProjectParameterSearchTest {
         val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(1))
+        assertThat(matches[0].type, equalTo(Type.PROJECT))
         assertThat(matches[0], equalTo(searchResult(project)))
     }
 

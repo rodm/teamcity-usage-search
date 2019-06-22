@@ -47,6 +47,7 @@ class BuildTypeParameterSearchTest {
         val matches = searcher.findMatches()
 
         assertThat(matches, hasSize(1))
+        assertThat(matches[0].type, equalTo(Type.BUILD))
         assertThat(matches[0], equalTo(searchResult(buildType)))
     }
 

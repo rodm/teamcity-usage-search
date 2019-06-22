@@ -24,7 +24,7 @@ class ParameterSearch(private val parameter: String, private val project: SProje
         val results = mutableListOf<SearchResult>()
         val matcher = ParameterMatcher(parameter)
 
-        val projectResult = SearchResult(project.externalId, project.fullName)
+        val projectResult = SearchResult(project.externalId, project.fullName, Type.PROJECT)
         project.ownParameters.forEach { parameter ->
             val names = matcher.getMatchingNames(parameter.value)
             projectResult.namesFor("Parameters", names)

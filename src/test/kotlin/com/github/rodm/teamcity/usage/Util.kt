@@ -33,7 +33,7 @@ fun searchResult(buildType: BuildTypeIdentity): SearchResult {
     return SearchResult(buildType.externalId, buildType.fullName, type)
 }
 
-fun searchResult(project: SProject): SearchResult = SearchResult(project.externalId, project.fullName)
+fun searchResult(project: SProject): SearchResult = SearchResult(project.externalId, project.fullName, Type.PROJECT)
 
 fun project(): FakeProject {
     return FakeProject()
