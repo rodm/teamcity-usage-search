@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.github.rodm"
-version = "0.5-SNAPSHOT"
+version = "0.5"
 
 extra["teamcityVersion"] = findProperty("teamcity.api.version") as String? ?: "2019.1"
 
