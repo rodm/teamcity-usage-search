@@ -3,7 +3,7 @@ import com.github.rodm.teamcity.TeamCityEnvironment
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.31"
+    kotlin("jvm") version "1.3.40"
 
     id ("org.gradle.jacoco")
     id ("com.github.rodm.teamcity-server") version "1.2.1"
@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.github.rodm"
-version = "0.4"
+version = "0.5-SNAPSHOT"
 
 extra["teamcityVersion"] = findProperty("teamcity.api.version") as String? ?: "2019.1"
 
