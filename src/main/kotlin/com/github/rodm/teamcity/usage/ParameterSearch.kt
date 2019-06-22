@@ -25,7 +25,7 @@ class ParameterSearch(private val parameter: String, private val project: SProje
         val matcher = ParameterMatcher(parameter)
 
         project.ownBuildTypeTemplates.forEach { template ->
-            val result = SearchResult(template.externalId, template.fullName)
+            val result = SearchResult(template.externalId, template.fullName, Type.TEMPLATE)
 
             template.ownOptions.forEach { option ->
                 val optionValue = template.getOption(option).toString()

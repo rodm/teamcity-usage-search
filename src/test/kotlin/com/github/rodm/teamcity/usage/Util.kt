@@ -25,7 +25,13 @@ import jetbrains.buildServer.util.Option
 import jetbrains.buildServer.util.StringOption
 import org.mockito.Mockito
 
-fun searchResult(buildType: BuildTypeIdentity): SearchResult = SearchResult(buildType.externalId, buildType.fullName)
+fun searchResult(buildType: BuildTypeIdentity): SearchResult {
+    val type = when (buildType) {
+        is BuildTypeTemplate -> Type.TEMPLATE
+        else -> Type.BUILD
+    }
+    return SearchResult(buildType.externalId, buildType.fullName, type)
+}
 
 fun project(): FakeProject {
     return FakeProject()

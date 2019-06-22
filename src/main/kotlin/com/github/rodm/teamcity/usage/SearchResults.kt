@@ -25,6 +25,7 @@ class SearchResults(elements: Collection<SearchResult>): ArrayList<SearchResult>
             val resultElement = Element("result")
             resultElement.setAttribute("id", result.externalId)
             resultElement.setAttribute("name", result.fullName)
+            resultElement.setAttribute("type", result.type.name)
             result.namesBySection.forEach { section ->
                 val sectionElement = Element("section")
                 sectionElement.setAttribute("name", section.key)
@@ -40,7 +41,12 @@ class SearchResults(elements: Collection<SearchResult>): ArrayList<SearchResult>
     }
 }
 
-data class SearchResult(val externalId: String, val fullName: String) {
+enum class Type {
+    BUILD,
+    TEMPLATE
+}
+
+data class SearchResult(val externalId: String, val fullName: String, val type: Type = Type.BUILD) {
     val namesBySection = LinkedHashMap<String, LinkedHashSet<String>>()
 
     fun namesFor(section: String, names: List<String>) {

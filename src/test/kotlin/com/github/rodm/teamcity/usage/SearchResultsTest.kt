@@ -108,6 +108,30 @@ class SearchResultsTest {
     }
 
     @Test
+    fun `serialize search results with build type returns result element with build type attribute`() {
+        val xmlResponse = XmlResponseUtil.newXmlResponse()
+        val results = SearchResults(listOf(SearchResult("extId", "build name", Type.BUILD)))
+
+        results.serialize(xmlResponse)
+
+        val nodes = xmlResponse.getChildren("result")
+        val result = nodes[0] as Element
+        assertThat(result.getAttributeValue("type") as String, equalTo("BUILD"))
+    }
+
+    @Test
+    fun `serialize search results with build template returns result element with template type attribute`() {
+        val xmlResponse = XmlResponseUtil.newXmlResponse()
+        val results = SearchResults(listOf(SearchResult("extId", "build name", Type.TEMPLATE)))
+
+        results.serialize(xmlResponse)
+
+        val nodes = xmlResponse.getChildren("result")
+        val result = nodes[0] as Element
+        assertThat(result.getAttributeValue("type") as String, equalTo("TEMPLATE"))
+    }
+
+    @Test
     fun `serialize search results returns result element for each build type`() {
         val xmlResponse = XmlResponseUtil.newXmlResponse()
         val results = SearchResults(
