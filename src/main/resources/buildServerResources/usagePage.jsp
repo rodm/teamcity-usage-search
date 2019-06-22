@@ -58,10 +58,13 @@
     <table>
         <tbody>
             <tr id="usageResultBuildTypeTemplate">
-                <td><admin:editBuildTypeLink buildTypeId="##BUILD_TYPE_ID##">NAME</admin:editBuildTypeLink></td>
+                <td><admin:editBuildTypeLink buildTypeId="##EXTERNAL_ID##">NAME</admin:editBuildTypeLink></td>
             </tr>
             <tr id="usageResultBuildTemplateTemplate">
-                <td><admin:editTemplateLink templateId="##BUILD_TYPE_ID##">NAME</admin:editTemplateLink></td>
+                <td><admin:editTemplateLink templateId="##EXTERNAL_ID##">NAME</admin:editTemplateLink></td>
+            </tr>
+            <tr id="usageResultProjectTemplate">
+                <td><admin:editProjectLink projectId="##EXTERNAL_ID##">NAME</admin:editProjectLink></td>
             </tr>
         </tbody>
     </table>

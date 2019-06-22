@@ -45,6 +45,7 @@ BS.UsageSearch = {
 
                 var buildTypeTemplate = $j('#usageResultBuildTypeTemplate');
                 var buildTemplateTemplate = $j('#usageResultBuildTemplateTemplate');
+                var projectTemplate = $j('#usageResultProjectTemplate');
                 var response = BS.Util.documentRoot(transport);
                 var matches = response.getElementsByTagName('result');
 
@@ -53,10 +54,12 @@ BS.UsageSearch = {
                     var newRow = buildTypeTemplate.clone();
                     if ($j(match).attr('type') === "TEMPLATE") {
                         newRow = buildTemplateTemplate.clone();
+                    } else if ($j(match).attr('type') === "PROJECT") {
+                        newRow = projectTemplate.clone();
                     }
                     var link = newRow.find('a');
                     link.attr('href', function () {
-                        return $j(this).attr('href').replace('##BUILD_TYPE_ID##', match.getAttribute('id'));
+                        return $j(this).attr('href').replace('##EXTERNAL_ID##', match.getAttribute('id'));
                     });
                     link.text(match.getAttribute('name'));
                     var sections = $j(match.getElementsByTagName('section')).map(function() {
