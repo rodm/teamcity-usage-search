@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.github.rodm"
-version = "0.5"
+version = "0.6-SNAPSHOT"
 
 extra["teamcityVersion"] = findProperty("teamcity.api.version") as String? ?: "2019.1"
 
@@ -73,6 +73,7 @@ teamcity {
 
         "teamcity2019.1" {
             version = "2019.1"
+//            homeDir = file("<path to>/TeamCity")
             serverOptions ("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005")
             agentOptions ("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006")
         }
