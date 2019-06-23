@@ -120,7 +120,7 @@ class BuildTemplateParameterSearchTest {
     }
 
     @Test
-    fun `search for parameter returns build template when found in build feature`() {
+    fun `search for parameter returns build template when found in a build feature`() {
         val feature = buildFeature().withParameters(mapOf("param1" to "%parameter%"))
         val buildTemplate = buildTemplate().withBuildFeature(feature)
         val project = project().withBuildTemplate(buildTemplate)
@@ -132,6 +132,21 @@ class BuildTemplateParameterSearchTest {
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
         assertThat(matches[0].namesBySection["Build Features"], contains(equalTo("parameter")))
+    }
+
+    @Test
+    fun `search for parameter returns build template when found in a failure condition`() {
+        val failureCondition = failureCondition().withParameters(mapOf("param1" to "%parameter%"))
+        val buildTemplate = buildTemplate().withFailureCondition(failureCondition)
+        val project = project().withBuildTemplate(buildTemplate)
+
+        val searchFor = "parameter"
+        val searcher = ParameterSearch(searchFor, project)
+        val matches = searcher.findMatches()
+
+        assertThat(matches, hasSize(1))
+        assertThat(matches[0], equalTo(searchResult(buildTemplate)))
+        assertThat(matches[0].namesBySection["Failure Conditions"], contains(equalTo("parameter")))
     }
 
     @Test

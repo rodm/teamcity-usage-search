@@ -16,6 +16,8 @@
 
 package com.github.rodm.teamcity.usage
 
+import jetbrains.buildServer.serverSide.BuildFeature
+import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
 import jetbrains.buildServer.serverSide.SProject
 
 class ParameterSearch(parameter: String, private val project: SProject) {
@@ -60,7 +62,8 @@ class ParameterSearch(parameter: String, private val project: SProject) {
             template.buildFeatures.forEach { feature ->
                 feature.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
-                    result.namesFor("Build Features", names)
+                    val section = if (feature.isFailureCondition()) "Failure Conditions" else "Build Features"
+                    result.namesFor(section, names)
                 }
             }
             template.dependencies.forEach { dependency ->
@@ -102,7 +105,8 @@ class ParameterSearch(parameter: String, private val project: SProject) {
             buildType.buildFeatures.forEach { feature ->
                 feature.parameters.forEach { parameter ->
                     val names = matcher.getMatchingNames(parameter.value)
-                    result.namesFor("Build Features", names)
+                    val section = if (feature.isFailureCondition()) "Failure Conditions" else "Build Features"
+                    result.namesFor(section, names)
                 }
             }
             buildType.ownDependencies.forEach { dependency ->
@@ -129,4 +133,8 @@ class ParameterSearch(parameter: String, private val project: SProject) {
             findMatches(subProject, results)
         }
     }
+}
+
+fun SBuildFeatureDescriptor.isFailureCondition(): Boolean {
+    return buildFeature.placeToShow == BuildFeature.PlaceToShow.FAILURE_REASON
 }

@@ -45,9 +45,9 @@ fun buildType(): FakeBuildType {
 
 fun buildTemplate(): FakeBuildTemplate = FakeBuildTemplate()
 
-fun buildFeature(): FakeBuildFeature {
-    return FakeBuildFeature()
-}
+fun failureCondition(): FakeBuildFeature = FakeBuildFeature(FailureConditionBuildFeature())
+
+fun buildFeature(): FakeBuildFeature = FakeBuildFeature()
 
 fun requirement(name: String, value: String): Requirement {
     return Requirement(name, value, EQUALS)
@@ -162,6 +162,8 @@ class FakeBuildType: SBuildType by Mockito.mock(SBuildType::class.java) {
         return this
     }
 
+    fun withFailureCondition(condition: SBuildFeatureDescriptor): FakeBuildType = withBuildFeature(condition)
+
     fun withBuildFeature(feature: SBuildFeatureDescriptor): FakeBuildType {
         features.add(feature)
         return this
@@ -240,6 +242,8 @@ class FakeBuildTemplate: BuildTypeTemplate by Mockito.mock(BuildTypeTemplate::cl
         return this
     }
 
+    fun withFailureCondition(condition: SBuildFeatureDescriptor): FakeBuildTemplate = withBuildFeature(condition)
+
     fun withBuildFeature(feature: SBuildFeatureDescriptor): FakeBuildTemplate {
         features.add(feature)
         return this
@@ -280,19 +284,32 @@ class FakeBuildRunner : SBuildRunnerDescriptor by Mockito.mock(SBuildRunnerDescr
     }
 }
 
-class FakeBuildFeature : SBuildFeatureDescriptor by Mockito.mock(SBuildFeatureDescriptor::class.java) {
-
+class FakeBuildFeature(val type: BuildFeature = GeneralBuildFeature())
+    : SBuildFeatureDescriptor by Mockito.mock(SBuildFeatureDescriptor::class.java)
+{
     private val params: MutableMap<String, String> = mutableMapOf()
 
-    override fun getParameters(): MutableMap<String, String> {
-        return params
-    }
+    override fun getBuildFeature(): BuildFeature = type
+    override fun getParameters(): MutableMap<String, String> = params
 
     fun withParameters(parameters: Map<String, String>): FakeBuildFeature {
         params.clear()
         params.putAll(parameters)
         return this
     }
+}
+
+class GeneralBuildFeature: BuildFeature()  {
+    override fun getType(): String = "General"
+    override fun getDisplayName(): String = "General display name"
+    override fun getEditParametersUrl(): String? = "not used"
+}
+
+class FailureConditionBuildFeature: BuildFeature()  {
+    override fun getType(): String = "Failure"
+    override fun getDisplayName(): String = "Failure condition display name"
+    override fun getEditParametersUrl(): String? = "not used"
+    override fun getPlaceToShow(): PlaceToShow = PlaceToShow.FAILURE_REASON
 }
 
 class FakeDependency : Dependency by Mockito.mock(Dependency::class.java) {
