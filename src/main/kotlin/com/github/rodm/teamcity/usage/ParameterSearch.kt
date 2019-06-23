@@ -17,8 +17,11 @@
 package com.github.rodm.teamcity.usage
 
 import jetbrains.buildServer.serverSide.BuildFeature
+import jetbrains.buildServer.serverSide.BuildTypeOptions.BT_BRANCH_FILTER
+import jetbrains.buildServer.serverSide.BuildTypeOptions.BT_CHECKOUT_DIR
 import jetbrains.buildServer.serverSide.SBuildFeatureDescriptor
 import jetbrains.buildServer.serverSide.SProject
+import jetbrains.buildServer.util.Option
 
 class ParameterSearch(parameter: String, private val project: SProject) {
 
@@ -46,7 +49,8 @@ class ParameterSearch(parameter: String, private val project: SProject) {
             template.ownOptions.forEach { option ->
                 val optionValue = template.getOption(option).toString()
                 val names = matcher.getMatchingNames(optionValue)
-                result.namesFor("General Settings", names)
+                val section = if (option.isVcsOption()) "Version Control Settings" else "General Settings"
+                result.namesFor(section, names)
             }
             template.ownParameters.forEach { parameter ->
                 val names = matcher.getMatchingNames(parameter.value)
@@ -90,7 +94,8 @@ class ParameterSearch(parameter: String, private val project: SProject) {
             buildType.ownOptions.forEach { option ->
                 val optionValue = buildType.getOption(option).toString()
                 val names = matcher.getMatchingNames(optionValue)
-                result.namesFor("General Settings", names)
+                val section = if (option.isVcsOption()) "Version Control Settings" else "General Settings"
+                result.namesFor(section, names)
             }
             buildType.ownParameters.forEach { parameter ->
                 val names = matcher.getMatchingNames(parameter.value)
@@ -133,6 +138,10 @@ class ParameterSearch(parameter: String, private val project: SProject) {
             findMatches(subProject, results)
         }
     }
+}
+
+fun Option<Any>.isVcsOption(): Boolean {
+    return this == BT_BRANCH_FILTER || this == BT_CHECKOUT_DIR
 }
 
 fun SBuildFeatureDescriptor.isFailureCondition(): Boolean {

@@ -16,6 +16,7 @@
 
 package com.github.rodm.teamcity.usage
 
+import jetbrains.buildServer.serverSide.BuildTypeOptions
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasSize
@@ -176,6 +177,24 @@ class BuildTemplateParameterSearchTest {
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
         assertThat(matches[0].namesBySection["General Settings"], contains(equalTo("parameter")))
+    }
+
+    @Test
+    fun `search for parameter returns build template when found in version control settings`() {
+        val buildTemplate = buildTemplate()
+            .withOption("name", "%parameter1%")
+            .withOption(BuildTypeOptions.BT_BRANCH_FILTER.key, "%parameter2%")
+            .withOption(BuildTypeOptions.BT_CHECKOUT_DIR.key, "%parameter3%")
+        val project = project().withBuildTemplate(buildTemplate)
+
+        val searchFor = "parameter"
+        val searcher = ParameterSearch(searchFor, project)
+        val matches = searcher.findMatches()
+
+        assertThat(matches[0], equalTo(searchResult(buildTemplate)))
+        val vcsMatches = matches[0].namesBySection["Version Control Settings"]
+        assertThat(vcsMatches, hasSize(2))
+        assertThat(vcsMatches, containsInAnyOrder(equalTo("parameter2"), equalTo("parameter3")))
     }
 
     @Test
