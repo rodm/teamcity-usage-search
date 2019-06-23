@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.github.rodm"
-version = "0.6-SNAPSHOT"
+version = "0.6"
 
 extra["teamcityVersion"] = findProperty("teamcity.api.version") as String? ?: "2019.1"
 
@@ -53,7 +53,7 @@ teamcity {
             name = "usage-search"
             displayName = "Usage Search"
             version = rootProject.version as String?
-            description = "Search for build configurations using a configuration parameter"
+            description = "Search for parameters referenced in build configurations, build templates and projects"
             vendorName = "Rod MacKenzie"
             vendorUrl = "https://github.com/rodm"
             downloadUrl = "https://github.com/rodm/teamcity-usage-search"
@@ -63,7 +63,6 @@ teamcity {
         }
 
         publish {
-            channels = listOf("Beta")
             token = findProperty("jetbrains.token") as String?
         }
     }
