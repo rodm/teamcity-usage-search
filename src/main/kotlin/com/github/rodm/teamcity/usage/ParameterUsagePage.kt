@@ -26,5 +26,6 @@ class ParameterUsagePage(pagePlaces: PagePlaces,
 {
     init {
         addJsFile(descriptor.getPluginResourcesPath("usage.js"))
+        addCssFile(descriptor.getPluginResourcesPath("usage.css"))
     }
 }

@@ -23,15 +23,18 @@
 
 <div class="section noMargin">
   <h2 class="noBorder">Parameter Search</h2>
+  <bs:smallNote>
+      Search for parameters referenced by build configurations, build templates and project parameters.
+  </bs:smallNote>
 
   <div id="search-container">
     <div class="actionBar">
       <span class="nowrap">
         <label class="firstLabel" for="paramName" id="paramNameLabel">Parameter: </label>
-        <forms:textField className="actionInput" name="paramName" noAutoComplete="true"/>
+        <forms:textField className="actionInput" name="paramName" noAutoComplete="true" />
       </span>
 
-      <input class="btn btn_mini" type="button" value="Search"
+      <input id="searchButton" class="btn btn_mini" type="button" value="Search"
              onclick="return BS.UsageSearch.search('${currentProject.externalId}');"/>
 
       <div id="paramNameError" class="error" style="display: none;">
@@ -47,7 +50,7 @@
   <div id="errors"></div>
 
   <div>
-      <table class="parametersTable" style="width: 100%">
+      <table class="usageResultsTable" style="width: 100%">
           <tbody id="usageResults">
           </tbody>
       </table>

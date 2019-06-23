@@ -21,6 +21,11 @@ BS.UsageSearch = {
     initForm: function() {
         var paramName = $j('#paramName');
         paramName.focus();
+        paramName.keyup(function(event) {
+            if (event.keyCode === 13) {
+                $j("#searchButton").click();
+            }
+        });
     },
 
     search: function(projectId) {

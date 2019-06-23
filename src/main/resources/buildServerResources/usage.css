@@ -1,0 +1,14 @@
+
+table.usageResultsTable {
+    width: 100%;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    border-collapse: collapse;
+}
+
+table.usageResultsTable td {
+    border-top: 1px solid #ccc;
+    padding: .3em 0 .3em 0.3em;
+    vertical-align: top;
+    width: 50%;
+}
