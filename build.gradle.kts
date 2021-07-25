@@ -21,7 +21,7 @@ dependencies {
 
     testImplementation (platform("org.junit:junit-bom:5.4.2"))
     testImplementation ("org.junit.jupiter:junit-jupiter-api")
-    testImplementation ("org.mockito:mockito-core:2.7.22")
+    testImplementation ("org.mockito:mockito-core:2.22.0")
 
     testRuntimeOnly ("org.junit.jupiter:junit-jupiter-engine")
 }
