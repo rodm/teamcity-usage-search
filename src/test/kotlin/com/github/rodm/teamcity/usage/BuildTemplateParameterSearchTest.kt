@@ -78,7 +78,7 @@ class BuildTemplateParameterSearchTest {
         assertThat(matches, hasSize(1))
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
     }
-    
+
     @Test
     fun `search for parameter returns result with matching names`() {
         val buildTemplate = buildTemplate().withOwnParameters(mapOf("param1" to "%parameter1%", "param2" to "%prop2% %param3%"))
@@ -91,7 +91,7 @@ class BuildTemplateParameterSearchTest {
         assertThat(matches[0], equalTo(searchResult(buildTemplate)))
         assertThat(matches[0].namesBySection["Parameters"], containsInAnyOrder(equalTo("parameter1"), equalTo("param3")))
     }
-    
+
     @Test
     fun `search for parameter returns build template when found in build steps`() {
         val buildTemplate = buildTemplate()
