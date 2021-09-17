@@ -38,7 +38,7 @@
              onclick="return BS.UsageSearch.search('${currentProject.externalId}');"/>
 
       <div id="paramNameError" class="error" style="display: none;">
-        A parameter name must be specified and be a least 2 characters long
+        A parameter name must be specified and be at least 2 characters long
       </div>
     </div>
   </div>

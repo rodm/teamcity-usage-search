@@ -19,6 +19,7 @@ package com.github.rodm.teamcity.usage
 import jetbrains.buildServer.controllers.admin.projects.EditProjectTab
 import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PluginDescriptor
+import jetbrains.buildServer.web.openapi.PositionConstraint
 
 class ParameterUsagePage(pagePlaces: PagePlaces,
                          descriptor: PluginDescriptor) :
@@ -27,5 +28,8 @@ class ParameterUsagePage(pagePlaces: PagePlaces,
     init {
         addJsFile(descriptor.getPluginResourcesPath("usage.js"))
         addCssFile(descriptor.getPluginResourcesPath("usage.css"))
+        //setPosition(PositionConstraint.after("projectParams"))
+        setPosition(PositionConstraint.last())
+
     }
 }

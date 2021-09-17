@@ -89,7 +89,7 @@ class ParameterSearch(parameter: String, private val project: SProject) {
                 results.add(result)
             }
         }
-        project.buildTypes.forEach { buildType ->
+        project.ownBuildTypes.forEach { buildType ->
             val result = SearchResult(buildType.externalId, buildType.fullName)
             buildType.ownOptions.forEach { option ->
                 val optionValue = buildType.getOption(option).toString()
